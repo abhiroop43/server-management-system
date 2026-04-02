@@ -1,0 +1,66 @@
+﻿@page "/servers"
+
+@using ServerManagement.Models
+@inject HttpClient httpClient
+
+<PageTitle>Servers</PageTitle>
+
+<MudTable Items="@Elements" Dense="false" Hover="true" Bordered="true" Striped="true" Filter="new Func<Server, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Periodic Elements</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Nr</MudTh>
+        <MudTh>Sign</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Position</MudTh>
+        <MudTh>Molar mass</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.IsOnline</MudTd>
+        <MudTd DataLabel="Sign">@context.Status</MudTd>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Position">@context.HostName</MudTd>
+        <MudTd DataLabel="Molar mass">@context.PrimaryIp</MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+<div class="d-flex flex-wrap mt-4">
+    <MudSpacer />
+    <div style="min-width:200px;">
+        <MudText Class="align-self-center d-inline">Selected1: @selectedItem1?.Name</MudText>
+    </div>
+</div>
+
+@code {
+    private string searchString1 = "";
+    private Server selectedItem1 = null;
+    private HashSet<Server> selectedItems = new HashSet<Server>();
+
+    private IEnumerable<Server> Elements = new List<Server>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Elements = await httpClient.GetFromJsonAsync<List<Server>>("webapi/periodictable");
+    }
+
+    private bool FilterFunc1(Server element) => FilterFunc(element, searchString1);
+
+    private bool FilterFunc(Server element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.HostName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if ($"{element.Name} {element.HostName} {element.PrimaryIp}".Contains(searchString))
+            return true;
+        return false;
+    }
+}
