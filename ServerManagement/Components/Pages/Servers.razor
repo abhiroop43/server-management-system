@@ -12,18 +12,18 @@
         <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Nr</MudTh>
-        <MudTh>Sign</MudTh>
+        <MudTh></MudTh>
+        <MudTh>Status</MudTh>
         <MudTh>Name</MudTh>
-        <MudTh>Position</MudTh>
-        <MudTh>Molar mass</MudTh>
+        <MudTh>Host Name</MudTh>
+        <MudTh>Primary IP</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Nr">@context.IsOnline</MudTd>
-        <MudTd DataLabel="Sign">@context.Status</MudTd>
+        <MudTd DataLabel="Online">@context.IsOnline</MudTd>
+        <MudTd DataLabel="Status">@context.Status</MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Position">@context.HostName</MudTd>
-        <MudTd DataLabel="Molar mass">@context.PrimaryIp</MudTd>
+        <MudTd DataLabel="Host Name">@context.HostName</MudTd>
+        <MudTd DataLabel="Primary IP">@context.PrimaryIp</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager />

@@ -14,6 +14,7 @@ public class Server
     public List<string> IpAddresses { get; set; } = null!;
     public string MacAddress { get; set; } = null!;
     public OperatingSystem OperatingSystem { get; set; } = null!;
+    public string GeographicRegion { get; set; } = null!;
     public int CpuCores { get; set; }
     public double MemoryInGb { get; set; }
     public List<Disk> Disks { get; set; } = null!;
