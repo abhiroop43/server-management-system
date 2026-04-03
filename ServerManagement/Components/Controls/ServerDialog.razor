@@ -1,0 +1,29 @@
+<MudDialog>
+    <DialogContent>
+        @ContentText
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public required string ContentText { get; set; }
+
+    [Parameter] public required string ButtonText { get; set; }
+
+    [Parameter] public Color Color { get; set; }
+
+    [Parameter] public Guid ServerId { get; set; }
+
+    private void Submit()
+    {
+        Console.WriteLine($"Deleting server with ID: {ServerId} ....");
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}

@@ -1,0 +1,26 @@
+@page "/servers/edit/{id}"
+@page "/servers/new"
+
+<h3>@_pageHeader</h3>
+
+<p>Viewing details of server @Id</p>
+
+@code {
+    [Parameter] public string? Id { get; set; }
+    private string _pageHeader = "";
+
+    protected override void OnInitialized()
+    {
+        if (string.IsNullOrEmpty(Id))
+        {
+            _pageHeader = "Add New Server";
+        }
+        else
+        {
+            _pageHeader = $"Edit Server {Id}";
+        }
+
+        base.OnInitialized();
+    }
+
+}
