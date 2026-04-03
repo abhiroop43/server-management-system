@@ -1,13 +1,37 @@
 @page "/servers/edit/{id}"
 @page "/servers/new"
+@inject ServerClient ServerClient
 
 <h3>@_pageHeader</h3>
 
-<p>Viewing details of server @Id</p>
+<EditForm Model="@_serverModel" OnValidSubmit="OnValidSubmitAsync">
+    <DataAnnotationsValidator/>
+    <MudCard>
+        <MudCardContent>
+            <MudTextField Label="Name" HelperText="Max. 128 characters"
+                          @bind-Value="_serverModel.Name" For="@(() => _serverModel.Name)"/>
+            <MudTextField Label="Hostname" HelperText="AZIN123456"
+                          @bind-Value="_serverModel.HostName" For="@(() => _serverModel.HostName)"/>
+            <MudTextField Label="Primary IP Address" HelperText="10.0.134.12"
+                          @bind-Value="_serverModel.PrimaryIp" For="@(() => _serverModel.PrimaryIp)"/>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="mr-2">Add
+                Server
+            </MudButton>
+            <MudButton ButtonType="ButtonType.Reset" Variant="Variant.Outlined" Color="Color.Default" Class="ml-2">
+                Reset
+            </MudButton>
+        </MudCardActions>
+    </MudCard>
+</EditForm>
 
 @code {
     [Parameter] public string? Id { get; set; }
     private string _pageHeader = "";
+
+    ServerDetails _serverModel = new ServerDetails();
+    bool _success;
 
     protected override void OnInitialized()
     {
@@ -21,6 +45,13 @@
         }
 
         base.OnInitialized();
+    }
+
+    private async Task OnValidSubmitAsync(EditContext context)
+    {
+        _serverModel.Id = Guid.NewGuid();
+        _success = await ServerClient.AddNewServerDetails(_serverModel);
+        StateHasChanged();
     }
 
 }
