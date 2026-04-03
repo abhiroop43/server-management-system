@@ -14,11 +14,11 @@ public class ServerClient(HttpClient client, IConfiguration configuration)
         return await response.Content.ReadFromJsonAsync<List<ServerSummary>>() ?? [];
     }
 
-    public async Task<Server?> GetServerDetails(Guid serverId)
+    public async Task<ServerDetails?> GetServerDetails(Guid serverId)
     {
         var response = await client.GetAsync(
             $"{_apiBaseUrl}/servers/0a1b2c3d-4e5f-4789-a0b1-c2d3e4f50101"
         );
-        return await response.Content.ReadFromJsonAsync<Server>();
+        return await response.Content.ReadFromJsonAsync<ServerDetails>();
     }
 }

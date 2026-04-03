@@ -12,12 +12,14 @@ public enum ServerStatus
     Decommissioned,
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ServerOperatingSystem
 {
     Windows,
     Linux,
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum DiskType
 {
     Unknown,
