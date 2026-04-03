@@ -1,15 +1,16 @@
 ﻿@page "/servers"
 
+@using ServerManagement.Clients
 @using ServerManagement.Models
-@inject HttpClient httpClient
+@inject ServerClient ServerClient
 
 <PageTitle>Servers</PageTitle>
 
-<MudTable Items="@Elements" Dense="false" Hover="true" Bordered="true" Striped="true" Filter="new Func<Server, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+<MudTable Items="@_servers" Dense="false" Hover="true" Bordered="true" Striped="true" Filter="new Func<ServerSummary, bool>(FilterTable)" @bind-SelectedItem="_selectedItem1">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Periodic Elements</MudText>
+        <MudText Typo="Typo.h6">All Servers</MudText>
         <MudSpacer />
-        <MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField @bind-Value="_searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh></MudTh>
@@ -33,25 +34,24 @@
 <div class="d-flex flex-wrap mt-4">
     <MudSpacer />
     <div style="min-width:200px;">
-        <MudText Class="align-self-center d-inline">Selected1: @selectedItem1?.Name</MudText>
+        <MudText Class="align-self-center d-inline">Selected1: @_selectedItem1?.Name</MudText>
     </div>
 </div>
 
 @code {
-    private string searchString1 = "";
-    private Server selectedItem1 = null;
-    private HashSet<Server> selectedItems = new HashSet<Server>();
+    private string _searchString1 = "";
+    private ServerSummary? _selectedItem1;
 
-    private IEnumerable<Server> Elements = new List<Server>();
+    private IEnumerable<ServerSummary> _servers = new List<ServerSummary>();
 
     protected override async Task OnInitializedAsync()
     {
-        Elements = await httpClient.GetFromJsonAsync<List<Server>>("webapi/periodictable");
+        _servers = await ServerClient.GetServersList();
     }
 
-    private bool FilterFunc1(Server element) => FilterFunc(element, searchString1);
+    private bool FilterTable(ServerSummary element) => SearchServers(element, _searchString1);
 
-    private bool FilterFunc(Server element, string searchString)
+    private bool SearchServers(ServerSummary element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;

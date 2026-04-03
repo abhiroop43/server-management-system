@@ -1,5 +1,4 @@
 ﻿using ServerManagement.Constants;
-using OperatingSystem = System.OperatingSystem;
 
 namespace ServerManagement.Models;
 
@@ -13,7 +12,7 @@ public class Server
     public string PrimaryIp { get; set; } = null!;
     public List<string> IpAddresses { get; set; } = null!;
     public string MacAddress { get; set; } = null!;
-    public OperatingSystem OperatingSystem { get; set; } = null!;
+    public ServerOperatingSystem OperatingSystem { get; set; }
     public string GeographicRegion { get; set; } = null!;
     public int CpuCores { get; set; }
     public double MemoryInGb { get; set; }

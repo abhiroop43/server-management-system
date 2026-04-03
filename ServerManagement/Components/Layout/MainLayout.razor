@@ -1,7 +1,5 @@
 ﻿@inherits LayoutComponentBase
 
-@Body
-
 @* Required *@
 <MudThemeProvider />
 <MudPopoverProvider />
@@ -23,7 +21,7 @@
         <NavMenu/>
     </MudDrawer>
     <MudMainContent>
-        <MudContainer>
+        <MudContainer Class="mt-6">
             @Body
         </MudContainer>
     </MudMainContent>

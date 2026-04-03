@@ -1,5 +1,8 @@
-﻿namespace ServerManagement.Constants;
+﻿using System.Text.Json.Serialization;
 
+namespace ServerManagement.Constants;
+
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ServerStatus
 {
     Unknown,
@@ -9,7 +12,7 @@ public enum ServerStatus
     Decommissioned,
 }
 
-public enum OperatingSystem
+public enum ServerOperatingSystem
 {
     Windows,
     Linux,
