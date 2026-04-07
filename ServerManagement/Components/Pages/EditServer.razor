@@ -30,10 +30,10 @@
     [Parameter] public string? Id { get; set; }
     private string _pageHeader = "";
 
-    ServerDetails _serverModel = new ServerDetails();
+    ServerDetails _serverModel = new();
     bool _success;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         if (string.IsNullOrEmpty(Id))
         {
@@ -42,11 +42,12 @@
         else
         {
             _pageHeader = $"Edit Server {Id}";
+            _serverModel = await ServerClient.GetServerDetails(Guid.Parse(Id)) ?? new ServerDetails();
         }
 
-        base.OnInitialized();
+        await base.OnInitializedAsync();
     }
-
+    
     private async Task OnValidSubmitAsync(EditContext context)
     {
         _serverModel.Id = Guid.NewGuid();
