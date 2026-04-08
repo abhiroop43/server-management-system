@@ -15,6 +15,7 @@ public enum ServerStatus
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ServerOperatingSystem
 {
+    None,
     Windows,
     Linux,
 }

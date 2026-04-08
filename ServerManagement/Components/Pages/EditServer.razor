@@ -1,5 +1,6 @@
 @page "/servers/edit/{id}"
 @page "/servers/new"
+@using ServerManagement.Constants
 @inject ServerClient ServerClient
 
 <h3>@_pageHeader</h3>
@@ -14,6 +15,23 @@
                           @bind-Value="_serverModel.HostName" For="@(() => _serverModel.HostName)"/>
             <MudTextField Label="Primary IP Address" HelperText="10.0.134.12"
                           @bind-Value="_serverModel.PrimaryIp" For="@(() => _serverModel.PrimaryIp)"/>
+
+            <MudSelect @bind-Value="_serverModel.OperatingSystem"
+                       Variant="Variant.Text"
+                       Label="Operating Systems"
+                       Margin="Margin.Normal"
+                       FitContent="true"
+                       Placeholder="Please Select OS"
+                       HelperText="Select Server OS"
+                       HelperTextOnFocus="true"
+                       Clearable="true"
+                       Modal="false">
+                @foreach (var os in Enum.GetValues(typeof(ServerOperatingSystem)).Cast<ServerOperatingSystem>())
+                {
+                    <MudSelectItem Value="os">@os</MudSelectItem>
+                }
+            </MudSelect>
+
         </MudCardContent>
         <MudCardActions>
             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="mr-2">Add
@@ -33,7 +51,7 @@
     ServerDetails _serverModel = new();
     bool _success;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
         if (string.IsNullOrEmpty(Id))
         {
@@ -42,12 +60,11 @@
         else
         {
             _pageHeader = $"Edit Server {Id}";
-            _serverModel = await ServerClient.GetServerDetails(Guid.Parse(Id)) ?? new ServerDetails();
         }
 
-        await base.OnInitializedAsync();
+        base.OnInitialized();
     }
-    
+
     private async Task OnValidSubmitAsync(EditContext context)
     {
         _serverModel.Id = Guid.NewGuid();
