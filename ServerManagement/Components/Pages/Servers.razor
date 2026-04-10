@@ -3,52 +3,60 @@
 
 @inject IDialogService DialogService
 @inject ServerClient ServerClient
+@inject NavigationManager NavigationManager
 
-<PageTitle>Servers</PageTitle>
+<div class="d-flex flex-column flex-grow-1 gap-4">
 
-<MudTable Items="@_servers" Dense="false" Hover="true" Bordered="true" Striped="true" Filter="new Func<ServerSummary, bool>(FilterTable)" @bind-SelectedItem="_selectedItem1">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">All Servers</MudText>
-        <MudSpacer />
-        <MudTextField @bind-Value="_searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <HeaderContent>
-        <MudTh></MudTh>
-        <MudTh>Status</MudTh>
-        <MudTh>Name</MudTh>
-        <MudTh>Host Name</MudTh>
-        <MudTh>Primary IP</MudTh>
-        <MudTh></MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Online">@context.IsOnline</MudTd>
-        <MudTd DataLabel="Status">@context.Status</MudTd>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Host Name">@context.HostName</MudTd>
-        <MudTd DataLabel="Primary IP">@context.PrimaryIp</MudTd>
-        <MudTd>
-            <MudLink Href="@($"/servers/edit/{context.Id.ToString()}")" Typo="Typo.subtitle1"
-                     StartIcon="@Icons.Material.Filled.Edit"></MudLink>
-            <MudIconButton @onclick="() => OpenDeleteConfirmDialogAsync(context.Id)"
-                           Icon="@Icons.Material.Filled.Delete" Size="Size.Small" aria-label="delete"
-                           Color="Color.Error"></MudIconButton>
-        </MudTd>
-    </RowTemplate>
-    <PagerContent>
-        <MudTablePager />
-    </PagerContent>
-</MudTable>
+    <PageTitle>Servers</PageTitle>
 
-<div class="d-flex flex-wrap mt-4">
-    <MudSpacer />
-    <div style="min-width:200px;">
-        <MudText Class="align-self-center d-inline">Selected1: @_selectedItem1?.Name</MudText>
+    <MudTable Items="@_servers" Dense="false" Hover="true" Bordered="true" Striped="true" Filter="new Func<ServerSummary, bool>(FilterTable)" @bind-SelectedItem="_selectedServer">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">All Servers</MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh></MudTh>
+            <MudTh>Status</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Host Name</MudTh>
+            <MudTh>Primary IP</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Online">@context.IsOnline</MudTd>
+            <MudTd DataLabel="Status">@context.Status</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Host Name">@context.HostName</MudTd>
+            <MudTd DataLabel="Primary IP">@context.PrimaryIp</MudTd>
+            <MudTd>
+                <MudLink Href="@($"/servers/edit/{context.Id.ToString()}")" Typo="Typo.subtitle1"
+                         StartIcon="@Icons.Material.Filled.Edit"></MudLink>
+                <MudIconButton @onclick="() => OpenDeleteConfirmDialogAsync(context.Id)"
+                               Icon="@Icons.Material.Filled.Delete" Size="Size.Small" aria-label="delete"
+                               Color="Color.Error"></MudIconButton>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+
+@* <div class="d-flex flex-wrap mt-4"> *@
+@*     <MudSpacer /> *@
+@*     <div style="min-width:200px;"> *@
+@*         <MudText Class="align-self-center d-inline">Selected1: @_selectedServer?.Name</MudText> *@
+@*     </div> *@
+@* </div> *@
+
+    <div class="d-flex flex-row-reverse">
+        <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" @onclick="NavigateToCreateServer" />
     </div>
 </div>
 
 @code {
-    private string _searchString1 = "";
-    private ServerSummary? _selectedItem1;
+    private string _searchString = "";
+    private ServerSummary? _selectedServer;
 
     private IEnumerable<ServerSummary> _servers = new List<ServerSummary>();
 
@@ -57,7 +65,12 @@
         _servers = await ServerClient.GetServersList();
     }
 
-    private bool FilterTable(ServerSummary element) => SearchServers(element, _searchString1);
+    private void NavigateToCreateServer()
+    {
+        NavigationManager.NavigateTo("/servers/new");
+    }
+
+    private bool FilterTable(ServerSummary element) => SearchServers(element, _searchString);
 
     private bool SearchServers(ServerSummary element, string searchString)
     {

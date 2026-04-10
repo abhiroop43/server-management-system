@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 @* Required *@
-<MudThemeProvider />
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" @ref="_mudThemeProvider" />
 <MudPopoverProvider />
 
 @* Needed for dialogs *@
@@ -11,10 +11,12 @@
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Elevation="1">
+    <MudAppBar Elevation="1" Color="Color.Primary">
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudText Typo="Typo.h5" Class="ml-3">Server Management System</MudText>
         <MudSpacer />
+        
+        <MudIconButton Icon="@_themeIcon" Color="Color.Inherit" aria-label="toggle dark mode" @onclick="ToggleDarkMode" />
 
         <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End">
             <MudMenuItem Label="User Profile" Icon="@Icons.Material.Filled.Person"/>
@@ -33,6 +35,45 @@
 </MudLayout>
 @code {
     bool _drawerOpen = true;
+    private bool _isDarkMode;
+    string _themeIcon = Icons.Material.Filled.DarkMode;
+    private MudThemeProvider _mudThemeProvider;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
+            _themeIcon = _isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode;
+            // await _mudThemeProvider.WatchSystemDarkModeAsync(OnSystemDarkModeChanged);
+            StateHasChanged();
+        }
+    }
+
+    // private Task OnSystemDarkModeChanged(bool newValue)
+    // {
+    //     _isDarkMode = newValue;
+    //     _themeIcon = _isDarkMode ? Icons.Material.Filled.DarkMode : Icons.Material.Filled.LightMode;
+    //     StateHasChanged();
+    //     return Task.CompletedTask;
+    // }
+
+    void ToggleDarkMode()
+    {
+        if (_themeIcon == Icons.Material.Filled.DarkMode)
+        {
+            // currently light mode, set to dark mode
+            _themeIcon = Icons.Material.Filled.LightMode;
+            _isDarkMode = true;
+            StateHasChanged();
+            return;
+        }
+        
+        // currently dark mode, set to light mode
+        _themeIcon = Icons.Material.Filled.DarkMode;
+        _isDarkMode = false;
+        StateHasChanged();
+    }
 
     void DrawerToggle()
     {
