@@ -23,13 +23,12 @@ public class ServerClient(HttpClient client, IConfiguration configuration)
         return await response.Content.ReadFromJsonAsync<ServerDetails>();
     }
 
-    public async Task<bool> AddNewServerDetails(ServerDetails serverDetails)
+    public async Task<ApiResponse?> AddNewServerDetails(ServerDetails serverDetails)
     {
-        var response = await client.PostAsync(
-            $"{_apiBaseUrl}/servers",
-            new StringContent(JsonSerializer.Serialize(serverDetails))
-        );
+        var serializedPayload = JsonSerializer.Serialize(serverDetails);
+        var request = new StringContent(serializedPayload);
+        var response = await client.PostAsync($"{_apiBaseUrl}/servers", request);
 
-        return await response.Content.ReadFromJsonAsync<bool>();
+        return await response.Content.ReadFromJsonAsync<ApiResponse>();
     }
 }

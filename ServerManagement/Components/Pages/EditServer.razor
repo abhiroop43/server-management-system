@@ -116,7 +116,10 @@
     private async Task OnValidSubmitAsync(EditContext context)
     {
         _serverModel.Id = Guid.NewGuid();
-        _success = await ServerClient.AddNewServerDetails(_serverModel);
+        var response = await ServerClient.AddNewServerDetails(_serverModel);
+
+        _success = response?.Status.ToLower() == "success";
+
         StateHasChanged();
     }
 
