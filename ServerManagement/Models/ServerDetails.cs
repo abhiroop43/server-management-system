@@ -21,10 +21,10 @@ public class ServerDetails
     public string HostName { get; set; } = null!;
 
     [Required]
-    [RegularExpression(
-        @"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$
-"
-    )]
+    //     [RegularExpression(
+    //         @"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$
+    // "
+    //     )]
     public string PrimaryIp { get; set; } = null!;
 
     public List<string> IpAddresses { get; set; } = null!;
@@ -57,7 +57,7 @@ public class ServerDetails
 
     public decimal HealthScore { get; set; }
 
-    public List<string> Tags { get; set; } = null!;
+    public List<string> Tags { get; set; } = [];
 
     public Dictionary<string, string> Metadata { get; set; } = null!;
 

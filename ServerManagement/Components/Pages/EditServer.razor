@@ -7,14 +7,16 @@
 
 <EditForm Model="@_serverModel" OnValidSubmit="OnValidSubmitAsync">
     <DataAnnotationsValidator/>
-    <MudCard>
+    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-5">
+
+        <MudCard Outlined="true">
         <MudCardContent>
             <MudTextField Label="Name" HelperText="Max. 128 characters"
-                          @bind-Value="_serverModel.Name" For="@(() => _serverModel.Name)"/>
+                          @bind-Value="_serverModel.Name" For="@(() => _serverModel.Name)" MaxLength="128"/>
             <MudTextField Label="Hostname" HelperText="AZIN123456"
-                          @bind-Value="_serverModel.HostName" For="@(() => _serverModel.HostName)"/>
+                          @bind-Value="_serverModel.HostName" For="@(() => _serverModel.HostName)" MaxLength="50"/>
             <MudTextField Label="Primary IP Address" HelperText="10.0.134.12"
-                          @bind-Value="_serverModel.PrimaryIp" For="@(() => _serverModel.PrimaryIp)"/>
+                          @bind-Value="_serverModel.PrimaryIp" For="@(() => _serverModel.PrimaryIp)" MaxLength="15"/>
 
             <MudSelect @bind-Value="_serverModel.OperatingSystem"
                        Variant="Variant.Text"
@@ -31,9 +33,51 @@
                     <MudSelectItem Value="os">@os</MudSelectItem>
                 }
             </MudSelect>
+            <div class="d-flex justify-start">
+                <MudSwitch @bind-Value="_serverModel.IsOnline" Label="Is Server Online?" LabelPlacement="Placement.Left"
+                           Color="Color.Success"/>
+            </div>
+
+            <MudTextField Label="MAC Address" HelperText="00-15-5D-A9-73-0A"
+                          @bind-Value="_serverModel.MacAddress" For="@(() => _serverModel.MacAddress)"/>
+
+            <MudTextField Label="Geographic Region" HelperText="Europe West"
+                          @bind-Value="_serverModel.GeographicRegion" For="@(() => _serverModel.GeographicRegion)"/>
+
+            <MudNumericField @bind-Value="_serverModel.CpuCores" Label="CPU Cores" Variant="Variant.Text" Min="1"
+                             Max="100"/>
+
+            <MudNumericField @bind-Value="_serverModel.MemoryInGb" Label="Memory (GB)" Variant="Variant.Text" Min="0.1"
+                             Max="500.0"/>
+
+            <div class="mt-10">
+                <MudChipSet T="string"
+                            AllClosable="@true"
+                            CheckMark="@true"
+                            SelectionMode="@SelectionMode.MultiSelection"
+                            OnClose="@RemoveServerTag">
+                    @for (var i = 0; i < _serverModel.Tags.Count; i++)
+                    {
+                        var localIndex = i;
+                        <MudChip Value="@_serverModel.Tags[localIndex]"/>
+                    }
+                </MudChipSet>
+
+                <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="@ToggleModalForAddTag">Add Tag</MudButton>
+                <MudPopover Open="@_addTagFormOpen" Fixed="true" Class="px-4 pt-4">
+                    <div class="d-flex flex-column">
+                        <MudTextField @bind-Value="_newTag" MaxLength="15" Label="Tag Name"
+                                      HelperText="Max. 15 characters"/>
+                        <MudButton OnClick="@AddServerTag" Class="ml-auto mr-n3 mb-1" Variant="Variant.Filled"
+                                   Color="Color.Primary">Create
+                        </MudButton>
+                    </div>
+                </MudPopover>
+            </div>
 
         </MudCardContent>
-        <MudCardActions>
+
+            <MudCardActions>
             <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="mr-2">Add
                 Server
             </MudButton>
@@ -42,14 +86,18 @@
             </MudButton>
         </MudCardActions>
     </MudCard>
+    </MudContainer>
 </EditForm>
 
 @code {
     [Parameter] public string? Id { get; set; }
     private string _pageHeader = "";
+    private string _newTag = "";
 
     ServerDetails _serverModel = new();
     bool _success;
+
+    bool _addTagFormOpen = false;
 
     protected override void OnInitialized()
     {
@@ -70,6 +118,27 @@
         _serverModel.Id = Guid.NewGuid();
         _success = await ServerClient.AddNewServerDetails(_serverModel);
         StateHasChanged();
+    }
+
+    private void ToggleModalForAddTag() => _addTagFormOpen = !_addTagFormOpen;
+
+    private void AddServerTag()
+    {
+        if (string.IsNullOrEmpty(_newTag))
+        {
+            ToggleModalForAddTag();
+            return;
+        }
+
+        _serverModel.Tags.Add(_newTag);
+        _newTag = string.Empty;
+        ToggleModalForAddTag();
+    }
+
+    private void RemoveServerTag(MudChip<string> chip)
+    {
+        if (string.IsNullOrEmpty(chip.Value)) return;
+        _serverModel.Tags.Remove(chip.Value);
     }
 
 }
