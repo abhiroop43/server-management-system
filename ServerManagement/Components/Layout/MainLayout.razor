@@ -45,18 +45,28 @@
         {
             _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
             _themeIcon = _isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode;
-            // await _mudThemeProvider.WatchSystemDarkModeAsync(OnSystemDarkModeChanged);
+            await _mudThemeProvider.WatchSystemDarkModeAsync(OnSystemDarkModeChanged);
             StateHasChanged();
         }
     }
 
-    // private Task OnSystemDarkModeChanged(bool newValue)
-    // {
-    //     _isDarkMode = newValue;
-    //     _themeIcon = _isDarkMode ? Icons.Material.Filled.DarkMode : Icons.Material.Filled.LightMode;
-    //     StateHasChanged();
-    //     return Task.CompletedTask;
-    // }
+    private Task OnSystemDarkModeChanged(bool arg)
+    {
+        if (arg)
+        {
+            // enable dark mode
+            _themeIcon = Icons.Material.Filled.LightMode;
+            _isDarkMode = true;
+        }
+        else
+        {
+            _themeIcon = Icons.Material.Filled.DarkMode;
+            _isDarkMode = false;
+        }
+
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
 
     void ToggleDarkMode()
     {
