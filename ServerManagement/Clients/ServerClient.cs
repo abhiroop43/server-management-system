@@ -25,10 +25,29 @@ public class ServerClient(HttpClient client, IConfiguration configuration)
 
     public async Task<ApiResponse?> AddNewServerDetails(ServerDetails serverDetails)
     {
-        var serializedPayload = JsonSerializer.Serialize(serverDetails);
-        var request = new StringContent(serializedPayload);
-        var response = await client.PostAsync($"{_apiBaseUrl}/servers", request);
+        var response = await client.PostAsync(
+            $"{_apiBaseUrl}/servers",
+            new StringContent(JsonSerializer.Serialize(serverDetails))
+        );
 
+        return await response.Content.ReadFromJsonAsync<ApiResponse>();
+    }
+
+    public async Task<ApiResponse?> UpdateServerDetails(ServerDetails serverDetails)
+    {
+        var response = await client.PutAsync(
+            $"{_apiBaseUrl}/servers",
+            new StringContent(JsonSerializer.Serialize(serverDetails))
+        );
+
+        return await response.Content.ReadFromJsonAsync<ApiResponse>();
+    }
+
+    public async Task<ApiResponse?> DeleteServer(Guid serverId)
+    {
+        var response = await client.GetAsync(
+            $"{_apiBaseUrl}/servers/0a1b2c3d-4e5f-4789-a0b1-c2d3e4f50101"
+        );
         return await response.Content.ReadFromJsonAsync<ApiResponse>();
     }
 }

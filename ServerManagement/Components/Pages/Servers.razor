@@ -85,7 +85,7 @@
         return false;
     }
 
-    private Task OpenDeleteConfirmDialogAsync(Guid serverId)
+    private async Task OpenDeleteConfirmDialogAsync(Guid serverId)
     {
         var parameters = new DialogParameters<ServerDialog>
         {
@@ -96,6 +96,10 @@
         };
         var options = new DialogOptions { CloseOnEscapeKey = true };
 
-        return DialogService.ShowAsync<ServerDialog>("Confirm Delete", parameters, options);
+        // var response = await ServerClient.DeleteServer(serverId);
+        //
+        // Console.WriteLine(response?.Status);
+
+        await DialogService.ShowAsync<ServerDialog>("Confirm Delete", parameters, options);
     }
 }
