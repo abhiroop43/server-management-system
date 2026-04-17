@@ -4,6 +4,7 @@
 @inject IDialogService DialogService
 @inject ServerClient ServerClient
 @inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
 
 <div class="d-flex flex-column flex-grow-1 gap-4">
 
@@ -96,10 +97,27 @@
         };
         var options = new DialogOptions { CloseOnEscapeKey = true };
 
-        // var response = await ServerClient.DeleteServer(serverId);
-        //
-        // Console.WriteLine(response?.Status);
+        var dialog = await DialogService.ShowAsync<ServerDialog>("Confirm Delete", parameters, options);
+        var result = await dialog.Result;
 
-        await DialogService.ShowAsync<ServerDialog>("Confirm Delete", parameters, options);
+        if (result is { Canceled: true }) return;
+        Console.WriteLine($"Server {serverId} is being deleted....");
+        var response = await ServerClient.DeleteServer(serverId);
+
+        if (response?.Status.ToLower() == "success")
+        {
+            Snackbar.Add("Server has been deleted successfully.", Severity.Success);
+            await ReloadList();
+        }
+        else
+        {
+            Snackbar.Add("Failed to delete the server.", Severity.Error);
+        }
+    }
+
+    private async Task ReloadList()
+    {
+        _servers = await ServerClient.GetServersList();
+        StateHasChanged();
     }
 }

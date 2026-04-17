@@ -45,8 +45,8 @@ public class ServerClient(HttpClient client, IConfiguration configuration)
 
     public async Task<ApiResponse?> DeleteServer(Guid serverId)
     {
-        var response = await client.GetAsync(
-            $"{_apiBaseUrl}/servers/0a1b2c3d-4e5f-4789-a0b1-c2d3e4f50101"
+        var response = await client.DeleteAsync(
+            $"{_apiBaseUrl}/servers/0eb15765-671d-4aaf-997b-5eb7cd4c198a"
         );
         return await response.Content.ReadFromJsonAsync<ApiResponse>();
     }
