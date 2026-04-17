@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ServerManagement.Constants;
+using ServerManagement.Extensions;
 
 namespace ServerManagement.Models;
 
@@ -24,7 +25,8 @@ public class ServerDetails
     [RegularExpression(@"^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$")]
     public string PrimaryIp { get; set; } = null!;
 
-    public List<string> IpAddresses { get; set; } = null!;
+    [RegularExpressionList(@"^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$")]
+    public List<string> IpAddresses { get; set; } = [];
 
     [RegularExpression(
         @"^(([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|([0-9A-Fa-f]{4}\.){2}([0-9A-Fa-f]{4}))$"

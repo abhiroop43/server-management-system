@@ -5,7 +5,7 @@
 @inject NavigationManager NavigationManager
 @inject ServerClient ServerClient
 
-<h3>@_pageHeader</h3>
+<MudText Typo="Typo.h3">@_pageHeader</MudText>
 
 <EditForm Model="@_serverModel" OnValidSubmit="OnValidSubmitAsync">
     <DataAnnotationsValidator/>
@@ -14,11 +14,43 @@
         <MudCard Outlined="true">
         <MudCardContent>
             <MudTextField Label="Name" HelperText="Max. 128 characters"
-                          @bind-Value="_serverModel.Name" For="@(() => _serverModel.Name)" MaxLength="128"/>
+                          @bind-Value="_serverModel.Name"
+                          For="@(() => _serverModel.Name)" MaxLength="128"/>
             <MudTextField Label="Hostname" HelperText="AZIN123456"
-                          @bind-Value="_serverModel.HostName" For="@(() => _serverModel.HostName)" MaxLength="50"/>
+                          @bind-Value="_serverModel.HostName"
+                          For="@(() => _serverModel.HostName)" MaxLength="50"/>
             <MudTextField Label="Primary IP Address" HelperText="10.0.134.12"
-                          @bind-Value="_serverModel.PrimaryIp" For="@(() => _serverModel.PrimaryIp)" MaxLength="15"/>
+                          @bind-Value="_serverModel.PrimaryIp" F
+                          or="@(() => _serverModel.PrimaryIp)" MaxLength="15"/>
+
+            <div class="my-5">
+                <MudText Typo="Typo.subtitle2" Class="mb-2">Additional Server IP(s)</MudText>
+                <MudButton StartIcon="@Icons.Material.Filled.Add"
+                           Class="mb-2" OnClick="ToggleModalForAddServerIp">Add
+                </MudButton>
+                <MudPopover Open="@_addAdditionalServerIpFormOpen" Fixed="true" Class="px-4 pt-4">
+                    <div class="d-flex flex-column">
+                        <MudTextField @bind-Value="_newAdditionalServerIp" MaxLength="15" Label="New IP"
+                                      HelperText="192.168.15.31"/>
+                        <MudButton OnClick="@AddServerAdditionalIp"
+                                   Class="ml-auto mr-n3 mb-1" Variant="Variant.Filled"
+                                   Color="Color.Primary">Create
+                        </MudButton>
+                    </div>
+                </MudPopover>
+                @if (_serverModel.IpAddresses.Count > 0)
+                {
+                    <MudList T="string">
+                        @foreach (var additionalIp in _serverModel.IpAddresses)
+                        {
+                            <MudListItem Text="@additionalIp" Icon="@Icons.Material.Filled.Dns"
+                                         IconColor="Color.Info"
+                                         OnClick="() => { DeleteServerAdditionalIp(additionalIp); }"
+                                         Dense="true"/>
+                        }
+                    </MudList>
+                }
+            </div>
 
             <MudSelect @bind-Value="_serverModel.OperatingSystem"
                        Variant="Variant.Text"
@@ -30,26 +62,33 @@
                        HelperTextOnFocus="true"
                        Clearable="true"
                        Modal="false">
-                @foreach (var os in Enum.GetValues(typeof(ServerOperatingSystem)).Cast<ServerOperatingSystem>())
+                @foreach (var os in
+                              Enum.GetValues(typeof(ServerOperatingSystem))
+                                  .Cast<ServerOperatingSystem>())
                 {
                     <MudSelectItem Value="os">@os</MudSelectItem>
                 }
             </MudSelect>
             <div class="d-flex justify-start">
-                <MudSwitch @bind-Value="_serverModel.IsOnline" Label="Is Server Online?" LabelPlacement="Placement.Left"
+                <MudSwitch @bind-Value="_serverModel.IsOnline" Label="Is Server Online?"
+                           LabelPlacement="Placement.Left"
                            Color="Color.Success"/>
             </div>
 
             <MudTextField Label="MAC Address" HelperText="00-15-5D-A9-73-0A"
-                          @bind-Value="_serverModel.MacAddress" For="@(() => _serverModel.MacAddress)"/>
+                          @bind-Value="_serverModel.MacAddress"
+                          For="@(() => _serverModel.MacAddress)"/>
 
             <MudTextField Label="Geographic Region" HelperText="Europe West"
-                          @bind-Value="_serverModel.GeographicRegion" For="@(() => _serverModel.GeographicRegion)"/>
+                          @bind-Value="_serverModel.GeographicRegion"
+                          For="@(() => _serverModel.GeographicRegion)"/>
 
-            <MudNumericField @bind-Value="_serverModel.CpuCores" Label="CPU Cores" Variant="Variant.Text" Min="1"
+            <MudNumericField @bind-Value="_serverModel.CpuCores" Label="CPU Cores"
+                             Variant="Variant.Text" Min="1"
                              Max="100"/>
 
-            <MudNumericField @bind-Value="_serverModel.MemoryInGb" Label="Memory (GB)" Variant="Variant.Text" Min="0.1"
+            <MudNumericField @bind-Value="_serverModel.MemoryInGb" Label="Memory (GB)"
+                             Variant="Variant.Text" Min="0.1"
                              Max="500.0"/>
 
             <div class="mt-10">
@@ -65,12 +104,15 @@
                     }
                 </MudChipSet>
 
-                <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="@ToggleModalForAddTag">Add Tag</MudButton>
+                <MudButton StartIcon="@Icons.Material.Filled.Add"
+                           OnClick="@ToggleModalForAddTag">Add Tag
+                </MudButton>
                 <MudPopover Open="@_addTagFormOpen" Fixed="true" Class="px-4 pt-4">
                     <div class="d-flex flex-column">
                         <MudTextField @bind-Value="_newTag" MaxLength="15" Label="Tag Name"
                                       HelperText="Max. 15 characters"/>
-                        <MudButton OnClick="@AddServerTag" Class="ml-auto mr-n3 mb-1" Variant="Variant.Filled"
+                        <MudButton OnClick="@AddServerTag"
+                                   Class="ml-auto mr-n3 mb-1" Variant="Variant.Filled"
                                    Color="Color.Primary">Create
                         </MudButton>
                     </div>
@@ -91,10 +133,14 @@
         </MudCardContent>
 
             <MudCardActions>
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary"
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
                            Class="mr-2">@_submitButtonLabel
             </MudButton>
-                <MudButton ButtonType="ButtonType.Reset" Variant="Variant.Outlined" Color="Color.Default" Class="ml-2"
+                <MudButton ButtonType="ButtonType.Reset"
+                           Variant="Variant.Outlined"
+                           Color="Color.Default" Class="ml-2"
                            OnClick="ResetForm">
                 Reset
             </MudButton>
@@ -108,11 +154,13 @@
     private string _pageHeader = "";
     private string _newTag = "";
     private string _submitButtonLabel = "";
+    private string _newAdditionalServerIp = "";
 
     ServerDetails _serverModel = new();
     bool _success;
 
     bool _addTagFormOpen = false;
+    bool _addAdditionalServerIpFormOpen = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -123,7 +171,7 @@
         }
         else
         {
-            _pageHeader = $"Edit Server {Id}";
+            _pageHeader = $"Edit Server";
             _submitButtonLabel = "Update Server";
             var response = await ServerClient.GetServerDetails(Guid.Parse(Id));
 
@@ -193,6 +241,27 @@
     {
         _serverModel = new();
         StateHasChanged();
+    }
+
+    private void ToggleModalForAddServerIp() => _addAdditionalServerIpFormOpen = !_addAdditionalServerIpFormOpen;
+
+    private void AddServerAdditionalIp()
+    {
+        if (string.IsNullOrEmpty(_newAdditionalServerIp))
+        {
+            ToggleModalForAddServerIp();
+            return;
+        }
+
+        _serverModel.IpAddresses.Add(_newAdditionalServerIp);
+        _newAdditionalServerIp = string.Empty;
+        ToggleModalForAddServerIp();
+    }
+
+    private void DeleteServerAdditionalIp(string ipAddress)
+    {
+        if (string.IsNullOrEmpty(ipAddress)) return;
+        _serverModel.IpAddresses.Remove(ipAddress);
     }
 
 }
