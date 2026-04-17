@@ -21,10 +21,7 @@ public class ServerDetails
     public string HostName { get; set; } = null!;
 
     [Required]
-    //     [RegularExpression(
-    //         @"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$
-    // "
-    //     )]
+    [RegularExpression(@"^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$")]
     public string PrimaryIp { get; set; } = null!;
 
     public List<string> IpAddresses { get; set; } = null!;
