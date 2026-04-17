@@ -43,13 +43,6 @@
         </PagerContent>
     </MudTable>
 
-@* <div class="d-flex flex-wrap mt-4"> *@
-@*     <MudSpacer /> *@
-@*     <div style="min-width:200px;"> *@
-@*         <MudText Class="align-self-center d-inline">Selected1: @_selectedServer?.Name</MudText> *@
-@*     </div> *@
-@* </div> *@
-
     <div class="d-flex flex-row-reverse">
         <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" @onclick="NavigateToCreateServer" />
     </div>
@@ -93,7 +86,7 @@
             { x => x.ContentText, "Are you sure you want to delete this server? This action cannot be undone." },
             { x => x.ButtonText, "Delete" },
             { x => x.Color, Color.Error },
-            { x => x.ServerId, serverId },
+            { x => x.EntityId, serverId.ToString() },
         };
         var options = new DialogOptions { CloseOnEscapeKey = true };
 

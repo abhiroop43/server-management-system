@@ -17,11 +17,11 @@
 
     [Parameter] public Color Color { get; set; }
 
-    [Parameter] public Guid ServerId { get; set; }
+    [Parameter] public required string EntityId { get; set; }
 
     private void Submit()
     {
-        Console.WriteLine($"Deleting server with ID: {ServerId} ....");
+        Console.WriteLine($"Deleting item with ID: {EntityId} ....");
         MudDialog.Close(DialogResult.Ok(true));
     }
 

@@ -1,8 +1,11 @@
 @page "/servers/edit/{id}"
 @page "/servers/new"
+@using ServerManagement.Components.Controls
 @using ServerManagement.Constants
+
 @inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
+@inject IDialogService DialogService
 @inject ServerClient ServerClient
 
 <MudText Typo="Typo.h3">@_pageHeader</MudText>
@@ -45,7 +48,7 @@
                         {
                             <MudListItem Text="@additionalIp" Icon="@Icons.Material.Filled.Dns"
                                          IconColor="Color.Info"
-                                         OnClick="() => { DeleteServerAdditionalIp(additionalIp); }"
+                                         OnClick="async () => { await OpenDeleteConfirmDialogAsync(additionalIp); }"
                                          Dense="true"/>
                         }
                     </MudList>
@@ -262,6 +265,24 @@
     {
         if (string.IsNullOrEmpty(ipAddress)) return;
         _serverModel.IpAddresses.Remove(ipAddress);
+    }
+
+    private async Task OpenDeleteConfirmDialogAsync(string ipAddress)
+    {
+        var parameters = new DialogParameters<ServerDialog>
+        {
+            { x => x.ContentText, "Are you sure you want to delete this IP? This action cannot be undone." },
+            { x => x.ButtonText, "Delete" },
+            { x => x.Color, Color.Error },
+            { x => x.EntityId, ipAddress },
+        };
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+
+        var dialog = await DialogService.ShowAsync<ServerDialog>("Confirm Delete", parameters, options);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: true }) return;
+        DeleteServerAdditionalIp(ipAddress);
     }
 
 }
