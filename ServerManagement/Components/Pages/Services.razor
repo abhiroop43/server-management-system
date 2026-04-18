@@ -1,0 +1,9 @@
+﻿@page "/servers/{ServerId}/services"
+
+<div class="d-flex flex-column flex-grow-1 gap-4">
+    <PageTitle>Services</PageTitle>
+</div>
+
+@code {
+    [Parameter] public string? ServerId { get; set; }
+}

@@ -1,0 +1,8 @@
+﻿@page "/servers/{ServerId}/services/new"
+@page "/servers/{ServerId}/services/{ServiceId}"
+<h3>EditService</h3>
+
+@code {
+    [Parameter] public string? ServerId { get; set; }
+    [Parameter] public string? ServiceId { get; set; }
+}

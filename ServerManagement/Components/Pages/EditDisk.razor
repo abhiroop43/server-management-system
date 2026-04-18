@@ -1,0 +1,9 @@
+﻿@page "/servers/{ServerId}/disks/new"
+@page "/servers/{ServerId}/disks/{DiskId}"
+
+<h3>EditDisk</h3>
+
+@code {
+    [Parameter] public string? ServerId { get; set; }
+    [Parameter] public string? DiskId { get; set; }
+}

@@ -17,7 +17,7 @@
             <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh></MudTh>
+            <MudTh>Online</MudTh>
             <MudTh>Status</MudTh>
             <MudTh>Name</MudTh>
             <MudTh>Host Name</MudTh>
@@ -25,7 +25,12 @@
             <MudTh></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Online">@context.IsOnline</MudTd>
+            <MudTd DataLabel="Online">
+                <MudIcon Icon="@Icons.Material.Filled.Circle"
+                         Color="@ServerOnlineStatusColor(context.IsOnline)"
+                >
+                </MudIcon>
+            </MudTd>
             <MudTd DataLabel="Status">@context.Status</MudTd>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Host Name">@context.HostName</MudTd>
@@ -33,6 +38,12 @@
             <MudTd>
                 <MudLink Href="@($"/servers/edit/{context.Id.ToString()}")" Typo="Typo.subtitle1"
                          StartIcon="@Icons.Material.Filled.Edit"></MudLink>
+                <MudIconButton @onclick="() => NavigateToServices(context.Id.ToString())"
+                               Icon="@Icons.Material.Filled.Settings" Size="Size.Small" aria-label="services"
+                               Color="Color.Info"></MudIconButton>
+                <MudIconButton @onclick="() => NavigateToDisks(context.Id.ToString())"
+                               Icon="@Icons.Material.Filled.Storage" Size="Size.Small" aria-label="disks"
+                               Color="Color.Tertiary"></MudIconButton>
                 <MudIconButton @onclick="() => OpenDeleteConfirmDialogAsync(context.Id)"
                                Icon="@Icons.Material.Filled.Delete" Size="Size.Small" aria-label="delete"
                                Color="Color.Error"></MudIconButton>
@@ -112,5 +123,20 @@
     {
         _servers = await ServerClient.GetServersList();
         StateHasChanged();
+    }
+
+    private void NavigateToServices(string serverId)
+    {
+        NavigationManager.NavigateTo($"/servers/{serverId}/services");
+    }
+
+    private void NavigateToDisks(string serverId)
+    {
+        NavigationManager.NavigateTo($"/servers/{serverId}/disks");
+    }
+
+    private Color ServerOnlineStatusColor(bool serverOnline)
+    {
+        return serverOnline ? Color.Success : Color.Default;
     }
 }
