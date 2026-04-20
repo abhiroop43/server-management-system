@@ -2,7 +2,7 @@
 
 namespace ServerManagement.Models;
 
-public class ServiceStatus
+public class ServerHostedService
 {
     [Key]
     [Required]

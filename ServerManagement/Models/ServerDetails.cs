@@ -62,7 +62,7 @@ public class ServerDetails
 
     public Guid? OwnerId { get; set; }
 
-    public List<ServiceStatus> Services { get; set; } = null!;
+    public List<ServerHostedService> Services { get; set; } = null!;
 
     public string Notes { get; set; } = null!;
 }

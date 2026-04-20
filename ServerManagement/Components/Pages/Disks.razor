@@ -6,4 +6,10 @@
 
 @code {
     [Parameter] public string? ServerId { get; set; }
+
+    private string _searchString = "";
+    private Disk? _selectedDisk;
+
+    private IEnumerable<Disk> _disks = new List<Disk>();
+
 }
