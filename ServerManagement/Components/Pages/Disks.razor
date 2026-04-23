@@ -4,6 +4,7 @@
 @inject ServerClient ServerClient
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column flex-grow-1 gap-4">
     <PageTitle>Disks</PageTitle>
@@ -13,6 +14,14 @@
               @bind-SelectedItem="_selectedDisk">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Installed Disks</MudText>
+
+            <MudButton Class="mx-5"
+                       Variant="Variant.Filled"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       Color="Color.Primary"
+                       @onclick="NavigateToAddDisk">Add
+            </MudButton>
+
             <MudSpacer/>
             <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search"
@@ -29,7 +38,10 @@
 
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Capacity">@context.CapacityGb GiB</MudTd>
-            <MudTd DataLabel="Usage">@(Math.Round((context.UsedGb * 1.0 / context.CapacityGb * 1.0) * 100, 2))</MudTd>
+            <MudTd DataLabel="Usage">
+                <MudProgressLinear Color="Color.Primary" Rounded="true" Size="Size.Large"
+                                   Value="@(Math.Round((context.UsedGb * 1.0 / context.CapacityGb * 1.0) * 100, 0))"/>
+            </MudTd>
             <MudTd DataLabel="Type">@context.DiskType</MudTd>
             <MudTd>
                 <MudLink Href="@($"/servers/{ServerId}/disks/{context.Id.ToString()}")" Typo="Typo.subtitle1"
@@ -119,6 +131,11 @@
 
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
         _disks = JsonSerializer.Deserialize<List<Disk>>(response.Data, options);
+    }
+
+    private void NavigateToAddDisk()
+    {
+        NavigationManager.NavigateTo($"/servers/{ServerId}/disks/new");
     }
 
 }

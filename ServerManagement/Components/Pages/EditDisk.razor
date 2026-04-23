@@ -1,9 +1,143 @@
 ﻿@page "/servers/{ServerId}/disks/new"
 @page "/servers/{ServerId}/disks/{DiskId}"
+@using System.Text.Json
+@using ServerManagement.Constants
+@inject ISnackbar Snackbar
+@inject ServerClient ServerClient
+@inject NavigationManager NavigationManager
 
-<h3>EditDisk</h3>
+<PageTitle>@_pageHeader</PageTitle>
+
+<MudText Typo="Typo.h3">@_pageHeader</MudText>
+
+<EditForm Model="@_dataModel" OnValidSubmit="OnValidSubmitAsync">
+    <DataAnnotationsValidator/>
+    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-5">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudTextField Label="Disk Name" HelperText="Application_Data"
+                              @bind-Value="_dataModel.Name"
+                              For="@(() => _dataModel.Name)"/>
+
+                <MudNumericField @bind-Value="_dataModel.CapacityGb" Label="Capacity (GB)"
+                                 Variant="Variant.Text" Min="1"
+                                 Max="9999"/>
+                <MudNumericField @bind-Value="_dataModel.UsedGb" Label="Used (GB)"
+                                 Variant="Variant.Text" Min="1"
+                                 Max="9999"/>
+
+                <MudSelect @bind-Value="_dataModel.DiskType"
+                           Variant="Variant.Text"
+                           Label="Disk Type"
+                           Margin="Margin.Normal"
+                           FitContent="true"
+                           Placeholder="Please Select Type"
+                           HelperText="Select Server Type"
+                           HelperTextOnFocus="true"
+                           Clearable="true"
+                           Modal="false">
+                    @foreach (var diskType in
+                                  Enum.GetValues(typeof(DiskType))
+                                      .Cast<DiskType>())
+                    {
+                        <MudSelectItem Value="diskType">@diskType</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudCardContent>
+
+            <MudCardActions>
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Class="mr-2">@_submitButtonLabel
+                </MudButton>
+                <MudButton ButtonType="ButtonType.Reset"
+                           Variant="Variant.Outlined"
+                           Color="Color.Default" Class="ml-2"
+                           OnClick="ResetForm">
+                    Reset
+                </MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudContainer>
+</EditForm>
 
 @code {
     [Parameter] public string? ServerId { get; set; }
     [Parameter] public string? DiskId { get; set; }
+
+    private string _pageHeader = "";
+    private string _submitButtonLabel = "";
+
+    Disk _dataModel = new Disk();
+    bool _success;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(ServerId))
+        {
+            Snackbar.Add("Server Id is missing.", Severity.Error);
+            return;
+        }
+
+        if (string.IsNullOrEmpty(DiskId))
+        {
+            _pageHeader = "Add New Disk";
+            _submitButtonLabel = "Add Disk";
+        }
+        else
+        {
+            _pageHeader = "Edit Disk";
+            _submitButtonLabel = "Update Disk";
+
+            var response = await ServerClient.GetDiskDetails(Guid.Parse(ServerId), Guid.Parse(DiskId));
+            if (response?.Status.ToLower() != "success") return;
+
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            _dataModel = JsonSerializer.Deserialize<Disk>(response.Data, options);
+            _success = true;
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+    private async Task OnValidSubmitAsync()
+    {
+        if (string.IsNullOrEmpty(ServerId))
+        {
+            Snackbar.Add("Server Id is missing.", Severity.Error);
+            return;
+        }
+
+        ApiResponse? response;
+        if (_dataModel.Id == Guid.Empty)
+        {
+            _dataModel.Id = Guid.NewGuid();
+            response = await ServerClient.AddNewDisk(Guid.Parse(ServerId), _dataModel);
+        }
+        else
+        {
+            response = await ServerClient.UpdateDisk(Guid.Parse(ServerId), _dataModel);
+        }
+
+        _success = response?.Status.ToLower() == "success";
+        StateHasChanged();
+
+        if (_success)
+        {
+            Snackbar.Add("Disk added successfully", Severity.Success);
+            NavigationManager.NavigateTo($"/servers/{ServerId}/disks");
+        }
+        else
+        {
+            Snackbar.Add("Something went wrong.", Severity.Error);
+        }
+    }
+
+    private void ResetForm()
+    {
+        _dataModel = new();
+        StateHasChanged();
+    }
+
 }
