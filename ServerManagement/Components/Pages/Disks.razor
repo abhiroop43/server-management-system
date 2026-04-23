@@ -10,7 +10,7 @@
     <PageTitle>Disks</PageTitle>
 
     <MudTable Items="@_disks" Dense="false" Hover="true" Bordered="true" Striped="true"
-              Filter="FilterTable"
+              Filter="new Func<Disk, bool>(FilterTable)"
               @bind-SelectedItem="_selectedDisk">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Installed Disks</MudText>
