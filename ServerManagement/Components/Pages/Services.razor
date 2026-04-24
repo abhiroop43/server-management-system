@@ -25,17 +25,15 @@
         <HeaderContent>
             <MudTh>Name</MudTh>
             <MudTh>Capacity</MudTh>
-            <MudTh>Usage</MudTh>
-            <MudTh>Disk Type</MudTh>
+            <MudTh>Listening</MudTh>
+            <MudTh>Last Checked</MudTh>
             <MudTh></MudTh>
         </HeaderContent>
         <RowTemplate>
 
             <MudTd DataLabel="Name">@context.ServiceName</MudTd>
-            <MudTd DataLabel="Capacity">@context.Port GiB</MudTd>
-            <MudTd DataLabel="Listening">
-                @context.IsListening
-            </MudTd>
+            <MudTd DataLabel="Capacity">@context.Port</MudTd>
+            <MudTd DataLabel="Listening">@context.IsListening</MudTd>
             <MudTd DataLabel="Last Checked">@context.LastChecked</MudTd>
             <MudTd>
                 <MudLink Href="@($"/servers/{ServerId}/disks/{context.Id.ToString()}")" Typo="Typo.subtitle1"
@@ -60,8 +58,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await ReloadList();
         await base.OnInitializedAsync();
+        if (RendererInfo.IsInteractive)
+        {
+            await ReloadList();
+        }
     }
 
     private async Task ReloadList()
@@ -78,7 +79,7 @@
         }
 
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        _services = JsonSerializer.Deserialize<List<ServerHostedService>>(response.Data);
+        _services = JsonSerializer.Deserialize<List<ServerHostedService>>(response.Data, options);
     }
 
     private bool FilterTable(ServerHostedService element) => SearchServices(element, _searchString);

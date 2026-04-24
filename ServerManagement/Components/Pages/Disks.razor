@@ -67,9 +67,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await ReloadList();
-
         await base.OnInitializedAsync();
+        if (RendererInfo.IsInteractive)
+        {
+            await ReloadList();
+        }
     }
 
     private bool FilterTable(Disk element) => SearchDisks(element, _searchString);

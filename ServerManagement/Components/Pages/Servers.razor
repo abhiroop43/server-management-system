@@ -71,7 +71,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _servers = await ServerClient.GetServersList();
+        await base.OnInitializedAsync();
+        if (RendererInfo.IsInteractive)
+        {
+            _servers = await ServerClient.GetServersList();
+        }
     }
 
     private void NavigateToCreateServer()
