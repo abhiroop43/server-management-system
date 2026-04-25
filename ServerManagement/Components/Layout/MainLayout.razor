@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using ServerManagement.State
+@inherits LayoutComponentBase
+@inject AppState AppState
 
 @* Required *@
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" @ref="_mudThemeProvider" />
@@ -12,11 +14,13 @@
 
 <MudLayout>
     <MudAppBar Elevation="1" Color="Color.Primary">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
+                       OnClick="@((e) => DrawerToggle())"/>
         <MudText Typo="Typo.h5" Class="ml-3">Server Management System</MudText>
         <MudSpacer />
-        
-        <MudIconButton Icon="@_themeIcon" Color="Color.Inherit" aria-label="toggle dark mode" @onclick="ToggleDarkMode" />
+
+        <MudIconButton Icon="@_themeIcon" Color="Color.Inherit" aria-label="toggle dark mode"
+                       @onclick="ToggleDarkMode"/>
 
         <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End">
             <MudMenuItem Label="User Profile" Icon="@Icons.Material.Filled.Person"/>
@@ -37,11 +41,11 @@
     bool _drawerOpen = true;
     private bool _isDarkMode;
     string _themeIcon = Icons.Material.Filled.DarkMode;
-    private MudThemeProvider _mudThemeProvider;
+    private MudThemeProvider? _mudThemeProvider;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (firstRender && _mudThemeProvider != null)
         {
             _isDarkMode = await _mudThemeProvider.GetSystemDarkModeAsync();
             _themeIcon = _isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode;
@@ -70,23 +74,40 @@
 
     void ToggleDarkMode()
     {
+        var userPreferences = GetUserPreferencesFromAppState();
         if (_themeIcon == Icons.Material.Filled.DarkMode)
         {
             // currently light mode, set to dark mode
             _themeIcon = Icons.Material.Filled.LightMode;
             _isDarkMode = true;
             StateHasChanged();
+            userPreferences.IsDarkModeEnabled = _isDarkMode;
+            AppState.SetUserPreferences(userPreferences);
             return;
         }
-        
+
         // currently dark mode, set to light mode
         _themeIcon = Icons.Material.Filled.DarkMode;
         _isDarkMode = false;
         StateHasChanged();
+        userPreferences.IsDarkModeEnabled = _isDarkMode;
+        AppState.SetUserPreferences(userPreferences);
     }
 
     void DrawerToggle()
     {
         _drawerOpen = !_drawerOpen;
+        var userPreferences = GetUserPreferencesFromAppState();
+
+        userPreferences.IsDrawerOpen = _drawerOpen;
+        AppState.SetUserPreferences(userPreferences);
     }
+
+    private UserPreferences GetUserPreferencesFromAppState()
+    {
+        var userPreferences = AppState.GetUserPreferences();
+
+        return userPreferences ?? new UserPreferences();
+    }
+
 }

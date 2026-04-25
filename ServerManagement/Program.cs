@@ -2,6 +2,7 @@ using MudBlazor;
 using MudBlazor.Services;
 using ServerManagement.Clients;
 using ServerManagement.Components;
+using ServerManagement.State;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
 builder.Services.AddScoped<ServerClient>();
+builder.Services.AddScoped<AppState>();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();
