@@ -1,3 +1,14 @@
 <Solution>
-  <Project Path="ServerManagement/ServerManagement.csproj" />
+  <Folder Name="/API/">
+    <Project Path="API/ServerManagement.API/ServerManagement.API.csproj" />
+  </Folder>
+  <Folder Name="/Domain/">
+    <Project Path="Domain/ServerManagement.Domain/ServerManagement.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="Infrastructure/ServerManagement.Infrastructure/ServerManagement.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/UI/">
+    <Project Path="UI/ServerManagement.UI/ServerManagement.UI.csproj" />
+  </Folder>
 </Solution>

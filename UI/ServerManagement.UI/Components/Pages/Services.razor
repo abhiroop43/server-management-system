@@ -1,0 +1,132 @@
+﻿@page "/servers/{ServerId}/services"
+@using ServerManagement.UI.Components.Controls
+@using System.Text.Json
+@inject ServerClient ServerClient
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<div class="d-flex flex-column flex-grow-1 gap-4">
+    <PageTitle>Services</PageTitle>
+
+    <MudTable Items="@_services" Dense="false" Hover="true" Bordered="true" Striped="true"
+              Filter="new Func<ServerHostedService, bool>(FilterTable)" @bind-SelectedItem="_selectedService">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Installed Disks</MudText>
+
+            <MudButton Class="mx-5" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add"
+                       Color="Color.Primary" @onclick="NavigateToAddService">Add
+            </MudButton>
+
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Capacity</MudTh>
+            <MudTh>Listening</MudTh>
+            <MudTh>Last Checked</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+
+            <MudTd DataLabel="Name">@context.ServiceName</MudTd>
+            <MudTd DataLabel="Capacity">@context.Port</MudTd>
+            <MudTd DataLabel="Listening">@context.IsListening</MudTd>
+            <MudTd DataLabel="Last Checked">@context.LastChecked</MudTd>
+            <MudTd>
+                <MudLink Href="@($"/servers/{ServerId}/disks/{context.Id.ToString()}")" Typo="Typo.subtitle1"
+                         StartIcon="@Icons.Material.Filled.Edit"></MudLink>
+                <MudIconButton @onclick="() => OpenDeleteConfirmDialogAsync(context.Id)"
+                               Icon="@Icons.Material.Filled.Delete" Size="Size.Small" aria-label="delete" Color="Color.Error">
+                </MudIconButton>
+            </MudTd>
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager />
+        </PagerContent>
+    </MudTable>
+</div>
+
+@code {
+    [Parameter] public string? ServerId { get; set; }
+    private string _searchString = "";
+    private ServerHostedService? _selectedService;
+
+    private List<ServerHostedService> _services = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (RendererInfo.IsInteractive)
+        {
+            await ReloadList();
+        }
+    }
+
+    private async Task ReloadList()
+    {
+        if (string.IsNullOrEmpty(ServerId))
+        {
+            return;
+        }
+        var response = await ServerClient.GetServicesForServer(Guid.Parse(ServerId));
+
+        if (response?.Status.ToLower() != "success")
+        {
+            return;
+        }
+
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        _services = JsonSerializer.Deserialize<List<ServerHostedService>>(response.Data, options);
+    }
+
+    private bool FilterTable(ServerHostedService element) => SearchServices(element, _searchString);
+
+    private static bool SearchServices(ServerHostedService element, string searchString)
+    {
+        return string.IsNullOrWhiteSpace(searchString)
+               || element.ServiceName.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+               || element.Port.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase);
+    }
+    private void NavigateToAddService(MouseEventArgs args)
+    {
+        NavigationManager.NavigateTo($"/servers/{ServerId}/services/new");
+    }
+
+    private async Task OpenDeleteConfirmDialogAsync(Guid serviceId)
+    {
+        var parameters = new DialogParameters<ServerDialog>
+        {
+            { x => x.ContentText, "Are you sure you want to delete this service? This action cannot be undone." },
+            { x => x.ButtonText, "Delete" },
+            { x => x.Color, Color.Error },
+            { x => x.EntityId, serviceId.ToString() },
+        };
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+
+        var dialog = await DialogService.ShowAsync<ServerDialog>("Confirm Delete", parameters, options);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: true }) return;
+
+        if (string.IsNullOrEmpty(ServerId))
+        {
+            return;
+        }
+
+        Console.WriteLine($"Service {serviceId} is being deleted....");
+        var response = await ServerClient.DeleteService(Guid.Parse(ServerId), serviceId);
+
+        if (response?.Status.ToLower() == "success")
+        {
+            Snackbar.Add("Service has been deleted successfully.", Severity.Success);
+            await ReloadList();
+        }
+        else
+        {
+            Snackbar.Add("Failed to delete the Service.", Severity.Error);
+        }
+    }
+}
