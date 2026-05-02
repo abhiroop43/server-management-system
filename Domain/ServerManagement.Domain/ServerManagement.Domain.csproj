@@ -5,7 +5,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Abstractions\" />
     <Folder Include="Enums\" />
     <Folder Include="Interfaces\" />
     <Folder Include="ValueObjects\" />

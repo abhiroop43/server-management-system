@@ -1,6 +1,3 @@
 ﻿namespace ServerManagement.Domain.Entities;
 
-public class ApplicationUser
-{
-    
-}
+public class ApplicationUser { }
