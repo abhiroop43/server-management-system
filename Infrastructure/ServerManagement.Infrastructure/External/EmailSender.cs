@@ -1,6 +1,7 @@
 ﻿namespace ServerManagement.Infrastructure.External;
 
-public class EmailSender : IEmailSender<ApplicationUser>
+public class EmailSender(IResend resend, IConfiguration configuration)
+    : IEmailSender<ApplicationUser>
 {
     public async Task SendConfirmationLinkAsync(
         ApplicationUser user,
@@ -44,5 +45,14 @@ public class EmailSender : IEmailSender<ApplicationUser>
             await SendEmailAsync(user.Email, email, emailBody);
     }
 
-    public async Task SendEmailAsync(string emailAddress, string subject, string htmlMessage) { }
+    public async Task SendEmailAsync(string emailAddress, string subject, string htmlMessage)
+    {
+        var message = new EmailMessage();
+        message.From = configuration["NotificationsFromAddress"]!;
+        message.To.Add(emailAddress);
+        message.Subject = subject;
+        message.HtmlBody = htmlMessage;
+
+        await resend.EmailSendAsync(message);
+    }
 }

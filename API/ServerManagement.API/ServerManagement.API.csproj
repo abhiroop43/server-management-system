@@ -3,19 +3,17 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>e6102351-e33a-4224-87dc-59b580647d79</UserSecretsId>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Carter" Version="10.0.0" />
     <PackageReference Include="Mapster" Version="10.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\ServerManagement.Domain\ServerManagement.Domain.csproj" />
     <ProjectReference Include="..\..\Infrastructure\ServerManagement.Infrastructure\ServerManagement.Infrastructure.csproj" />
