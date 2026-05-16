@@ -4,10 +4,10 @@ using ServerManagement.Domain.CQRS;
 namespace ServerManagement.API.Features.Auth.Register;
 
 public record RegisterUserCommand(
-    string Email,
-    string FirstName,
+    string? Email,
+    string? FirstName,
     string LastName,
-    string Password,
+    string? Password,
     DateTime DateOfBirth
 ) : ICommand<RegisterUserResult>;
 

@@ -19,16 +19,14 @@ public class RegisterCommandHandler(
         {
             UserName = command.Email,
             Email = command.Email,
-            FirstName = command.FirstName,
+            FirstName = command.FirstName!,
             LastName = command.LastName,
             DateOfBirth = command.DateOfBirth,
         };
-        var result = await userManager.CreateAsync(user, command.Password);
+        var result = await userManager.CreateAsync(user, command.Password!);
 
         if (!result.Succeeded)
-        {
             return new RegisterUserResult(false);
-        }
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
         var confirmUrl =
