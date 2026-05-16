@@ -6,5 +6,6 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.IdentityModel.Tokens;
+global using Resend;
 global using ServerManagement.Infrastructure.Auth;
 global using ServerManagement.Infrastructure.Data;

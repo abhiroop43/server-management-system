@@ -1,6 +1,4 @@
-﻿using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using ServerManagement.Infrastructure.External;
+﻿using ServerManagement.Infrastructure.External;
 
 namespace ServerManagement.Infrastructure;
 
@@ -42,6 +40,14 @@ public static class DependencyInjection
                     ),
                 };
             });
+
+        services.AddOptions();
+        services.AddHttpClient<ResendClient>();
+        services.Configure<ResendClientOptions>(o =>
+        {
+            o.ApiToken = configuration["ResendApiKey"]!;
+        });
+        services.AddTransient<IResend, ResendClient>();
 
         services.AddTransient<IEmailSender<ApplicationUser>, EmailSender>();
         return services;
