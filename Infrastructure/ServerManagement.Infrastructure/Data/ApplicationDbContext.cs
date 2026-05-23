@@ -1,6 +1,3 @@
 ﻿namespace ServerManagement.Infrastructure.Data;
 
-public class ApplicationDbContext
-{
-    
-}
+public class ApplicationDbContext { }

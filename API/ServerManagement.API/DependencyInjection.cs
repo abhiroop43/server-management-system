@@ -1,8 +1,3 @@
-using Carter;
-using HealthChecks.UI.Client;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.StaticAssets;
-
 namespace ServerManagement.API;
 
 public static class DependencyInjection
@@ -16,6 +11,8 @@ public static class DependencyInjection
         {
             cfg.LicenseKey = configuration.GetSection("MEDIATR_LICENSE_KEY").Value;
             cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+            cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
         services.AddOpenApi();
         services.AddCarter();

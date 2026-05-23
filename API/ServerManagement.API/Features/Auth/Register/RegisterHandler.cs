@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 using ServerManagement.Domain.CQRS;
 using ServerManagement.Infrastructure.Auth;
 
@@ -26,7 +27,10 @@ public class RegisterCommandHandler(
         var result = await userManager.CreateAsync(user, command.Password!);
 
         if (!result.Succeeded)
-            return new RegisterUserResult(false);
+        {
+            var validationErrors = result.Errors.Select(err => $"{err.Code} : {err.Description}");
+            throw new ValidationException(string.Join("; ", validationErrors));
+        }
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
         var confirmUrl =
