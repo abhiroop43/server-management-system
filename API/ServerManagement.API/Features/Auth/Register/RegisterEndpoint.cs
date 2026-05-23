@@ -1,6 +1,7 @@
 ﻿using Carter;
 using Mapster;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ServerManagement.API.Features.Auth.Register;
 
@@ -20,7 +21,7 @@ public class RegisterEndpoint : ICarterModule
     {
         app.MapPost(
                 "/auth/register",
-                async (RegisterUserRequest request, ISender sender) =>
+                async ([FromBody] RegisterUserRequest request, ISender sender) =>
                 {
                     var command = request.Adapt<RegisterUserCommand>();
                     var result = await sender.Send(command);

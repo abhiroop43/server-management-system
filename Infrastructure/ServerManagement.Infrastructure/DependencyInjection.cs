@@ -12,7 +12,7 @@ public static class DependencyInjection
         var connectionString = configuration.GetConnectionString("ServerManagement");
 
         services.AddDbContext<ApplicationIdentityDbContext>(options =>
-            options.UseSqlServer(connectionString)
+            options.UseSqlServer(connectionString).EnableSensitiveDataLogging()
         );
         services
             .AddIdentity<ApplicationUser, IdentityRole>(options =>
