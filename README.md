@@ -3,6 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.txt)
 [![.NET Version](https://img.shields.io/badge/.NET-10.0-purple)](https://dotnet.microsoft.com)
 
+![GitHub Repo Banner](https://ghrb.waren.build/banner?header=%21%5Bopensourcehardware%5D+Server+Management+%F0%9F%92%BD&subheader=Enterprise-grade+Server+Management+Solution&bg=013B84-016EEA&color=FFFFFF&headerfont=Permanent+Marker&subheaderfont=Kinewave)
+
 A modern, full-stack server management system built with .NET 10, featuring a REST API backend and an interactive Blazor web frontend. Manage servers, disks, and services with user authentication, role-based access control, and a responsive UI.
 
 ## Table of Contents
