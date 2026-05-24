@@ -132,6 +132,14 @@ ServerManagement.sln
    dotnet user-secrets set "MEDIATR_LICENSE_KEY" "your-license-key" --project API/ServerManagement.API
    ```
 
+    ```bash
+   dotnet user-secrets set "ResendApiKey" "your-api-key" --project API/ServerManagement.API
+   ```
+
+    ```bash
+   dotnet user-secrets set "Jwt:Key" "your-jwt-secret" --project API/ServerManagement.API
+   ```
+
 ### Running the Application
 
 #### Using .NET CLI
