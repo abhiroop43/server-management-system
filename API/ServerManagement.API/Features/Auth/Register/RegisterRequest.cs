@@ -19,7 +19,11 @@ public class RegisterUserCommandValidator : AbstractValidator<RegisterUserComman
     {
         const string requiredErrorMessage = "{PropertyName} is required.";
         RuleFor(c => c.Email).NotEmpty().WithMessage(requiredErrorMessage);
-        RuleFor(c => c.Password).NotEmpty().WithMessage(requiredErrorMessage);
+        RuleFor(c => c.Password)
+            .NotEmpty()
+            .MinimumLength(8)
+            .MaximumLength(15)
+            .WithMessage(requiredErrorMessage);
         RuleFor(c => c.FirstName).NotEmpty().WithMessage(requiredErrorMessage);
     }
 }

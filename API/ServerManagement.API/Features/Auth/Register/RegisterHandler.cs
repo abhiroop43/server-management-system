@@ -1,7 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
-using ServerManagement.Domain.CQRS;
-using ServerManagement.Infrastructure.Auth;
 
 namespace ServerManagement.API.Features.Auth.Register;
 
