@@ -5,24 +5,26 @@ namespace ServerManagement.Infrastructure.Services;
 public class JwtTokenService(UserManager<ApplicationUser> userManager, IConfiguration configuration)
     : IJwtTokenService
 {
-    public async Task<string> GenerateJwtTokenAsync(ApplicationUser user)
+    public async Task<AuthToken> GenerateJwtTokenAsync(ApplicationUser user)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
 
         var claims = await BuildClaimsAsync(user);
 
+        var tokenExpiry = DateTime.Now.AddMinutes(
+            Convert.ToDouble(configuration["Jwt:AccessTokenExpiryMinutes"])
+        );
+
         var token = new JwtSecurityToken(
             configuration["Jwt:Issuer"],
             configuration["Jwt:Audience"],
             claims,
-            expires: DateTime.Now.AddMinutes(
-                Convert.ToDouble(configuration["Jwt:AccessTokenExpiryMinutes"])
-            ),
+            expires: tokenExpiry,
             signingCredentials: credentials
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return new AuthToken(new JwtSecurityTokenHandler().WriteToken(token), tokenExpiry);
     }
 
     private async Task<List<Claim>> BuildClaimsAsync(ApplicationUser user)
