@@ -1,14 +1,9 @@
-﻿using Carter;
-using Mapster;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-
-namespace ServerManagement.API.Features.Auth.Register;
+﻿namespace ServerManagement.API.Features.Auth.Register;
 
 public record RegisterUserRequest(
     string? Email,
     string? FirstName,
-    string LastName,
+    string? LastName,
     string? Password,
     DateTime DateOfBirth
 );

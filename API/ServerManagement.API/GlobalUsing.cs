@@ -1,7 +1,10 @@
 ﻿global using Carter;
 global using HealthChecks.UI.Client;
+global using Mapster;
+global using MediatR;
 global using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Mvc;
 global using ServerManagement.API;
 global using ServerManagement.Domain;
 global using ServerManagement.Domain.Behaviors;

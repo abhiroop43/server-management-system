@@ -40,7 +40,21 @@ public class CustomExceptionHandler(
                 statusCode = StatusCodes.Status404NotFound;
                 break;
 
+            case UserUnauthorizedException:
+                detail = exception.Message;
+                title = exception.GetType().Name;
+                statusCode = StatusCodes.Status401Unauthorized;
+                break;
+
             case InternalServerErrorException:
+                detail = environment.IsDevelopment()
+                    ? exception.Message
+                    : "An error has occurred. Please contact the administrator";
+                title = environment.IsDevelopment()
+                    ? exception.GetType().Name
+                    : "Internal Server Exception";
+                statusCode = StatusCodes.Status500InternalServerError;
+                break;
             default:
                 detail = environment.IsDevelopment()
                     ? exception.Message
