@@ -1,4 +1,6 @@
-﻿using ServerManagement.Infrastructure.External;
+﻿using ServerManagement.Infrastructure.Auth.Interfaces;
+using ServerManagement.Infrastructure.External;
+using ServerManagement.Infrastructure.Services;
 
 namespace ServerManagement.Infrastructure;
 
@@ -50,6 +52,8 @@ public static class DependencyInjection
         services.AddTransient<IResend, ResendClient>();
 
         services.AddTransient<IEmailSender<ApplicationUser>, EmailSender>();
+
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
         return services;
     }
 }

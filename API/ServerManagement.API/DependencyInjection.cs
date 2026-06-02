@@ -19,6 +19,12 @@ public static class DependencyInjection
         services
             .AddHealthChecks()
             .AddSqlServer(configuration.GetConnectionString("ServerManagement")!);
+
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
+
+        services.AddHttpContextAccessor();
+
         return services;
     }
 
@@ -28,6 +34,8 @@ public static class DependencyInjection
         if (app.Environment.IsDevelopment())
         {
             app.MapOpenApi();
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
 
         app.MapCarter();

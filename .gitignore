@@ -5,6 +5,7 @@ riderModule.iml
 /_ReSharper.Caches/
 .idea/
 .vs/
+.vscode/
 *.csproj.user
 .env
 .DS_Store

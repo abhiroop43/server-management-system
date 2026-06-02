@@ -9,5 +9,7 @@ global using ServerManagement.API;
 global using ServerManagement.Domain;
 global using ServerManagement.Domain.Behaviors;
 global using ServerManagement.Domain.CQRS;
+global using ServerManagement.Domain.Exceptions;
 global using ServerManagement.Infrastructure;
 global using ServerManagement.Infrastructure.Auth;
+global using ServerManagement.Infrastructure.Auth.Interfaces;

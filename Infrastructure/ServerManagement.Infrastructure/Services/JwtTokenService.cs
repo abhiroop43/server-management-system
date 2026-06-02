@@ -35,8 +35,19 @@ public class JwtTokenService(UserManager<ApplicationUser> userManager, IConfigur
             new(JwtRegisteredClaimNames.Email, user.Email!),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(ClaimTypes.NameIdentifier, user.Id),
-            new(ClaimTypes.Name, user.Email!),
+            new(ClaimTypes.GivenName, user.FirstName),
         };
+
+        if (!string.IsNullOrEmpty(user.LastName))
+        {
+            claims.Add(new(ClaimTypes.Surname, user.LastName));
+        }
+
+        if (user.DateOfBirth != null)
+        {
+            claims.Add(new(ClaimTypes.DateOfBirth, user.DateOfBirth.Value.ToString("yyyy-MM-dd")));
+        }
+
         var roles = await userManager.GetRolesAsync(user);
 
         claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));

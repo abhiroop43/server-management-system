@@ -1,12 +1,9 @@
-﻿using ServerManagement.Domain.Exceptions;
-using ServerManagement.Infrastructure.Services;
-
-namespace ServerManagement.API.Features.Auth.Login;
+﻿namespace ServerManagement.API.Features.Auth.Login;
 
 public class LoginHandler(
     UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager,
-    JwtTokenService jwtTokenService,
+    IJwtTokenService jwtTokenService,
     IConfiguration configuration
 ) : ICommandHandler<LoginCommand, LoginResult>
 {
