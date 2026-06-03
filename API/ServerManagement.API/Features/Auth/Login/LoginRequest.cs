@@ -1,5 +1,4 @@
 using FluentValidation;
-using ServerManagement.Domain.CQRS;
 
 namespace ServerManagement.API.Features.Auth.Login;
 
