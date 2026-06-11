@@ -26,7 +26,7 @@ builder.Services.AddScoped<AppState>();
 builder.Services.AddScoped<ITokenStore, ProtectedTokenStore>();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<JwtAuthenticationStateProvider>();
+
 builder.Services.AddHttpClient();
 
 var app = builder.Build();

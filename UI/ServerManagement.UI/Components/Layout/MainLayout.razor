@@ -1,6 +1,7 @@
 ﻿@using ServerManagement.UI.State
 @inherits LayoutComponentBase
 @inject AppState AppState
+@inject NavigationManager NavigationManager
 
 @* Required *@
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" @ref="_mudThemeProvider" />
@@ -22,17 +23,42 @@
         <MudIconButton Icon="@_themeIcon" Color="Color.Inherit" aria-label="toggle dark mode"
                        @onclick="ToggleDarkMode"/>
 
-        <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End">
-            <MudMenuItem Label="User Profile" Icon="@Icons.Material.Filled.Person"/>
-            <MudMenuItem Label="Logout" Icon="@Icons.Material.Filled.Logout"/>
-        </MudMenu>
-
+        <AuthorizeView>
+            <Authorized>
+                <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End">
+                    <MudMenuItem Label="User Profile" Icon="@Icons.Material.Filled.Person"/>
+                    <MudMenuItem Label="Logout" Icon="@Icons.Material.Filled.Logout"/>
+                </MudMenu>
+            </Authorized>
+            <NotAuthorized>
+                <MudButton Class="mx-2"
+                           Variant="Variant.Filled"
+                           EndIcon="@Icons.Material.Filled.Login"
+                           Color="Color.Error"
+                           @onclick="LoginButtonClicked">
+                    Login
+                </MudButton>
+                <MudButton Class="mx-2"
+                           Variant="Variant.Filled"
+                           EndIcon="@Icons.Material.Filled.EditNote"
+                           Color="Color.Tertiary"
+                           @onclick="RegisterButtonClicked">
+                    Register
+                </MudButton>
+            </NotAuthorized>
+        </AuthorizeView>
     </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        <NavMenu/>
-    </MudDrawer>
+
+    <AuthorizeView>
+        <Authorized>
+            <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+                <NavMenu/>
+            </MudDrawer>
+        </Authorized>
+    </AuthorizeView>
+
     <MudMainContent>
-        <MudContainer Class="mt-6">
+        <MudContainer Class="mt-6" Fixed="true">
             @Body
         </MudContainer>
     </MudMainContent>
@@ -108,6 +134,16 @@
         var userPreferences = AppState.GetUserPreferences();
 
         return userPreferences ?? new UserPreferences();
+    }
+
+    private void LoginButtonClicked()
+    {
+        NavigationManager.NavigateTo("/login");
+    }
+
+    private void RegisterButtonClicked()
+    {
+        NavigationManager.NavigateTo("/register");
     }
 
 }

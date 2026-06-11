@@ -1,6 +1,8 @@
 ﻿@page "/servers/{ServerId}/services"
-@using ServerManagement.UI.Components.Controls
 @using System.Text.Json
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
 @inject ServerClient ServerClient
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService

@@ -1,6 +1,8 @@
 ﻿@page "/servers/{ServerId}/disks"
 @using System.Text.Json
-@using ServerManagement.UI.Components.Controls
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
 @inject ServerClient ServerClient
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
