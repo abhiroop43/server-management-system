@@ -2,6 +2,7 @@ using MudBlazor;
 using MudBlazor.Services;
 using ServerManagement.UI.Clients;
 using ServerManagement.UI.Components;
+using ServerManagement.UI.Providers;
 using ServerManagement.UI.State;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,10 @@ builder.Services.AddMudServices(config =>
 });
 builder.Services.AddScoped<ServerClient>();
 builder.Services.AddScoped<AppState>();
+builder.Services.AddScoped<ITokenStore, ProtectedTokenStore>();
+builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<JwtAuthenticationStateProvider>();
 builder.Services.AddHttpClient();
 
 var app = builder.Build();

@@ -5,6 +5,11 @@ namespace ServerManagement.Infrastructure.Services;
 public class JwtTokenService(UserManager<ApplicationUser> userManager, IConfiguration configuration)
     : IJwtTokenService
 {
+    /// <summary>
+    /// Generate a JWT token for the given user
+    /// </summary>
+    /// <param name="user">The user for whom the JWT token needs to be generated</param>
+    /// <returns>The generated JWT token and its expiry</returns>
     public async Task<AuthToken> GenerateJwtTokenAsync(ApplicationUser user)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
@@ -16,41 +21,51 @@ public class JwtTokenService(UserManager<ApplicationUser> userManager, IConfigur
             Convert.ToDouble(configuration["Jwt:AccessTokenExpiryMinutes"])
         );
 
-        var token = new JwtSecurityToken(
-            configuration["Jwt:Issuer"],
-            configuration["Jwt:Audience"],
-            claims,
-            expires: tokenExpiry,
-            signingCredentials: credentials
-        );
+        var token = new SecurityTokenDescriptor
+        {
+            Issuer = configuration["Jwt:Issuer"],
+            Audience = configuration["Jwt:Audience"],
+            Claims = claims,
+            Expires = tokenExpiry,
+            SigningCredentials = credentials,
+        };
 
-        return new AuthToken(new JwtSecurityTokenHandler().WriteToken(token), tokenExpiry);
+        return new AuthToken(new JsonWebTokenHandler().CreateToken(token), tokenExpiry);
     }
 
-    private async Task<List<Claim>> BuildClaimsAsync(ApplicationUser user)
+    /// <summary>
+    /// Build the claims for the JWT token
+    /// </summary>
+    /// <param name="user">The user for whom the JWT token needs to be generated</param>
+    /// <returns>The claims for the JWT token</returns>
+    private async Task<Dictionary<string, object>> BuildClaimsAsync(ApplicationUser user)
     {
-        var claims = new List<Claim>
+        var claims = new Dictionary<string, object>
         {
-            new(JwtRegisteredClaimNames.Sub, user.Id),
-            new(JwtRegisteredClaimNames.Email, user.Email!),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(ClaimTypes.NameIdentifier, user.Id),
-            new(ClaimTypes.GivenName, user.FirstName),
+            { JwtRegisteredClaimNames.Sub, user.Id },
+            { JwtRegisteredClaimNames.Email, user.Email! },
+            { JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString() },
+            { ClaimTypes.NameIdentifier, user.Id },
+            { ClaimTypes.GivenName, user.FirstName },
         };
 
         if (!string.IsNullOrEmpty(user.LastName))
         {
-            claims.Add(new(ClaimTypes.Surname, user.LastName));
+            claims.Add(ClaimTypes.Surname, user.LastName);
         }
 
         if (user.DateOfBirth != null)
         {
-            claims.Add(new(ClaimTypes.DateOfBirth, user.DateOfBirth.Value.ToString("yyyy-MM-dd")));
+            claims.Add(ClaimTypes.DateOfBirth, user.DateOfBirth.Value.ToString("yyyy-MM-dd"));
         }
 
         var roles = await userManager.GetRolesAsync(user);
 
-        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        foreach (var role in roles)
+        {
+            claims.Add(ClaimTypes.Role, role);
+        }
+
         return claims;
     }
 }
