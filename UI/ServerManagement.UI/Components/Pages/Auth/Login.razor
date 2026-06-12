@@ -4,5 +4,49 @@
 
 <MudText Typo="Typo.h3">Let's get you signed in</MudText>
 
+<EditForm Model="@_dataModel" OnValidSubmit="OnValidSubmitAsync">
+    <DataAnnotationsValidator/>
+    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-5">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudTextField Label="Disk Name" HelperText="Application_Data"
+                              @bind-Value="_dataModel.Email"
+                              For="@(() => _dataModel.Email)"/>
+
+                <MudTextField InputType="InputType.Password"
+                              @bind-Value="_dataModel.Password"
+                              For="@(() => _dataModel.Password)"
+                />
+
+            </MudCardContent>
+
+            <MudCardActions>
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Class="mr-2">Login
+                </MudButton>
+                <MudButton ButtonType="ButtonType.Reset"
+                           Variant="Variant.Outlined"
+                           Color="Color.Default" Class="ml-2"
+                           @onclick="ResetForm">
+                    Reset
+                </MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudContainer>
+</EditForm>
+
 @code {
+    UserLogin _dataModel = new();
+
+    private async Task OnValidSubmitAsync()
+    {
+    }
+
+    private void ResetForm()
+    {
+        _dataModel = new();
+        StateHasChanged();
+    }
 }
