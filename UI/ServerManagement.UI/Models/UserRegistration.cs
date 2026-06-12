@@ -4,18 +4,18 @@ namespace ServerManagement.UI.Models;
 
 public class UserRegistration
 {
-    [Required]
-    [EmailAddress]
+    [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Invalid email address.")]
     public string? Email { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "First name is required.")]
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }
 
-    [Required]
-    [MinLength(8)]
-    [MaxLength(15)]
+    [Required(ErrorMessage = "Password is required.")]
+    [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
+    [MaxLength(15, ErrorMessage = "Password must be at most 15 characters long.")]
     public string? Password { get; set; }
 
     public DateTime? DateOfBirth { get; set; }

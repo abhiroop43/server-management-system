@@ -25,6 +25,7 @@ builder.Services.AddScoped<ServerClient>();
 builder.Services.AddScoped<AppState>();
 builder.Services.AddScoped<ITokenStore, ProtectedTokenStore>();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
+builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddAuthorizationCore();
 
 builder.Services.AddHttpClient();

@@ -1,4 +1,5 @@
-﻿@using ServerManagement.UI.State
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using ServerManagement.UI.State
 @inherits LayoutComponentBase
 @inject AppState AppState
 @inject NavigationManager NavigationManager
@@ -15,10 +16,14 @@
 
 <MudLayout>
     <MudAppBar Elevation="1" Color="Color.Primary">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
-                       OnClick="@((e) => DrawerToggle())"/>
+        <AuthorizeView>
+            <Authorized>
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
+                               OnClick="@((e) => DrawerToggle())"/>
+            </Authorized>
+        </AuthorizeView>
         <MudText Typo="Typo.h5" Class="ml-3">Server Management System</MudText>
-        <MudSpacer />
+        <MudSpacer/>
 
         <MudIconButton Icon="@_themeIcon" Color="Color.Inherit" aria-label="toggle dark mode"
                        @onclick="ToggleDarkMode"/>
