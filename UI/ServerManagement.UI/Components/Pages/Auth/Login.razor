@@ -9,11 +9,12 @@
     <MudContainer MaxWidth="MaxWidth.Small" Class="mt-5">
         <MudCard Outlined="true">
             <MudCardContent>
-                <MudTextField Label="Disk Name" HelperText="Application_Data"
+                <MudTextField Label="Email" HelperText="john.doe@example.com"
                               @bind-Value="_dataModel.Email"
                               For="@(() => _dataModel.Email)"/>
 
-                <MudTextField InputType="InputType.Password"
+                <MudTextField Label="Password" InputType="InputType.Password"
+                              HelperText="************"
                               @bind-Value="_dataModel.Password"
                               For="@(() => _dataModel.Password)"
                 />
@@ -46,7 +47,8 @@
 
     private void ResetForm()
     {
-        _dataModel = new();
+        _dataModel = new UserLogin();
         StateHasChanged();
     }
+
 }

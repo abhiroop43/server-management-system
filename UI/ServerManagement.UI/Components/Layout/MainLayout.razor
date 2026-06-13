@@ -5,24 +5,27 @@
 @inject NavigationManager NavigationManager
 
 @* Required *@
-<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" @ref="_mudThemeProvider" />
-<MudPopoverProvider />
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" @ref="_mudThemeProvider"/>
+<MudPopoverProvider/>
 
 @* Needed for dialogs *@
-<MudDialogProvider />
+<MudDialogProvider/>
 
 @* Needed for snackbars *@
-<MudSnackbarProvider />
+<MudSnackbarProvider/>
 
 <MudLayout>
     <MudAppBar Elevation="1" Color="Color.Primary">
         <AuthorizeView>
             <Authorized>
                 <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
-                               OnClick="@((e) => DrawerToggle())"/>
+                               OnClick="@(e => DrawerToggle())"/>
             </Authorized>
         </AuthorizeView>
-        <MudText Typo="Typo.h5" Class="ml-3">Server Management System</MudText>
+        <MudImage Src="images/logo.png" Width="50" Height="50" Class="pb-1 pt-0"></MudImage>
+        <MudText Typo="Typo.h5" Class="ml-3">
+            Server Management System
+        </MudText>
         <MudSpacer/>
 
         <MudIconButton Icon="@_themeIcon" Color="Color.Inherit" aria-label="toggle dark mode"
@@ -68,6 +71,7 @@
         </MudContainer>
     </MudMainContent>
 </MudLayout>
+
 @code {
     bool _drawerOpen = true;
     private bool _isDarkMode;
