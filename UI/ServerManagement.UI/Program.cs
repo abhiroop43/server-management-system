@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using MudBlazor;
 using MudBlazor.Services;
 using ServerManagement.UI.Clients;
@@ -21,12 +22,23 @@ builder.Services.AddMudServices(config =>
     config.SnackbarConfiguration.ShowTransitionDuration = 500;
     config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
 });
+
 builder.Services.AddScoped<ServerClient>();
+builder.Services.AddScoped<AuthClient>();
 builder.Services.AddScoped<AppState>();
 builder.Services.AddScoped<ITokenStore, ProtectedTokenStore>();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
+builder.Services.AddScoped<JwtAuthenticationStateProvider>();
 builder.Services.AddCascadingAuthenticationState();
+
 builder.Services.AddAuthorizationCore();
+builder
+    .Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = "BlazorJwt";
+        options.DefaultChallengeScheme = "BlazorJwt";
+    })
+    .AddScheme<AuthenticationSchemeOptions, ServerSideJwtHandler>("BlazorJwt", null);
 
 builder.Services.AddHttpClient();
 
@@ -35,7 +47,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    app.UseExceptionHandler("/Error", true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }

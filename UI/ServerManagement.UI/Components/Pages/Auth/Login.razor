@@ -1,4 +1,10 @@
 @page "/login"
+@using ServerManagement.UI.Providers
+
+@inject AuthClient AuthClient
+@inject ISnackbar Snackbar
+@inject JwtAuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
 <PageTitle>Login</PageTitle>
 
@@ -43,6 +49,22 @@
 
     private async Task OnValidSubmitAsync()
     {
+        var response = await AuthClient.Login(_dataModel);
+
+        if (response == null)
+        {
+            Snackbar.Add("Something went wrong. Login Failed.", Severity.Error);
+            return;
+        }
+
+        if (!response.Success || string.IsNullOrWhiteSpace(response.Token))
+        {
+            Snackbar.Add($"Login Failed. The email and/or the password is incorrect", Severity.Error);
+            return;
+        }
+
+        await AuthenticationStateProvider.NotifyAuthenticationAsync(response.Token);
+        NavigationManager.NavigateTo($"/servers");
     }
 
     private void ResetForm()
