@@ -1,8 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using ServerManagement.UI.Providers
 @using ServerManagement.UI.State
 @inherits LayoutComponentBase
 @inject AppState AppState
 @inject NavigationManager NavigationManager
+@inject JwtAuthenticationStateProvider AuthenticationStateProvider
 
 @* Required *@
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" @ref="_mudThemeProvider"/>
@@ -35,7 +37,7 @@
             <Authorized>
                 <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End">
                     <MudMenuItem Label="User Profile" Icon="@Icons.Material.Filled.Person"/>
-                    <MudMenuItem Label="Logout" Icon="@Icons.Material.Filled.Logout"/>
+                    <MudMenuItem Label="Logout" Icon="@Icons.Material.Filled.Logout" @onclick="LogoutUserAsync"/>
                 </MudMenu>
             </Authorized>
             <NotAuthorized>
@@ -153,6 +155,13 @@
     private void RegisterButtonClicked()
     {
         NavigationManager.NavigateTo("/register");
+    }
+
+    private async Task LogoutUserAsync()
+    {
+        Console.WriteLine("Logging out the user");
+        await AuthenticationStateProvider.NotifyUserLogoutAsync();
+        NavigationManager.NavigateTo("/", forceLoad: true);
     }
 
 }

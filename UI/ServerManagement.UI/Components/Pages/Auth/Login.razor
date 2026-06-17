@@ -64,7 +64,7 @@
         }
 
         await AuthenticationStateProvider.NotifyAuthenticationAsync(response.Token);
-        NavigationManager.NavigateTo($"/servers");
+        NavigationManager.NavigateTo("/", forceLoad: true);
     }
 
     private void ResetForm()

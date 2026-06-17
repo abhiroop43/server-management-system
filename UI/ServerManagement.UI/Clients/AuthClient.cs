@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 using ServerManagement.UI.Models;
 
 namespace ServerManagement.UI.Clients;
@@ -13,7 +14,11 @@ public class AuthClient(HttpClient client, IConfiguration configuration)
     {
         var response = await client.PostAsync(
             $"{_apiBaseUrl}/auth/login",
-            new StringContent(JsonSerializer.Serialize(loginRequest))
+            new StringContent(
+                JsonSerializer.Serialize(loginRequest),
+                Encoding.UTF8,
+                "application/json"
+            )
         );
 
         return await response.Content.ReadFromJsonAsync<LoginResponse>();
@@ -21,9 +26,14 @@ public class AuthClient(HttpClient client, IConfiguration configuration)
 
     public async Task<RegisterResponse?> Register(UserRegistration registerRequest)
     {
+        client.DefaultRequestHeaders.Add("Content-Type", "application/json");
         var response = await client.PostAsync(
             $"{_apiBaseUrl}/auth/register",
-            new StringContent(JsonSerializer.Serialize(registerRequest))
+            new StringContent(
+                JsonSerializer.Serialize(registerRequest),
+                Encoding.UTF8,
+                "application/json"
+            )
         );
 
         return await response.Content.ReadFromJsonAsync<RegisterResponse>();
