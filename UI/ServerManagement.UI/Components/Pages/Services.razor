@@ -1,55 +1,64 @@
 ﻿@page "/servers/{ServerId}/services"
 @using System.Text.Json
-@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using ServerManagement.UI.Components.Guards
 
-@attribute [Authorize]
 @inject ServerClient ServerClient
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 
-<div class="d-flex flex-column flex-grow-1 gap-4">
-    <PageTitle>Services</PageTitle>
+<AuthorizeView>
+    <Authorized>
+        <div class="d-flex flex-column flex-grow-1 gap-4">
+            <PageTitle>Services</PageTitle>
 
-    <MudTable Items="@_services" Dense="false" Hover="true" Bordered="true" Striped="true"
-              Filter="new Func<ServerHostedService, bool>(FilterTable)" @bind-SelectedItem="_selectedService">
-        <ToolBarContent>
-            <MudText Typo="Typo.h6">Installed Disks</MudText>
+            <MudTable Items="@_services" Dense="false" Hover="true" Bordered="true" Striped="true"
+                      Filter="new Func<ServerHostedService, bool>(FilterTable)" @bind-SelectedItem="_selectedService">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">Installed Disks</MudText>
 
-            <MudButton Class="mx-5" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add"
-                       Color="Color.Primary" @onclick="NavigateToAddService">Add
-            </MudButton>
+                    <MudButton Class="mx-5" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add"
+                               Color="Color.Primary" @onclick="NavigateToAddService">Add
+                    </MudButton>
 
-            <MudSpacer />
-            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start"
-                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-        </ToolBarContent>
-        <HeaderContent>
-            <MudTh>Name</MudTh>
-            <MudTh>Capacity</MudTh>
-            <MudTh>Listening</MudTh>
-            <MudTh>Last Checked</MudTh>
-            <MudTh></MudTh>
-        </HeaderContent>
-        <RowTemplate>
+                    <MudSpacer/>
+                    <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"
+                                  Class="mt-0"></MudTextField>
+                </ToolBarContent>
+                <HeaderContent>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Capacity</MudTh>
+                    <MudTh>Listening</MudTh>
+                    <MudTh>Last Checked</MudTh>
+                    <MudTh></MudTh>
+                </HeaderContent>
+                <RowTemplate Context="service">
 
-            <MudTd DataLabel="Name">@context.ServiceName</MudTd>
-            <MudTd DataLabel="Capacity">@context.Port</MudTd>
-            <MudTd DataLabel="Listening">@context.IsListening</MudTd>
-            <MudTd DataLabel="Last Checked">@context.LastChecked</MudTd>
-            <MudTd>
-                <MudLink Href="@($"/servers/{ServerId}/disks/{context.Id.ToString()}")" Typo="Typo.subtitle1"
-                         StartIcon="@Icons.Material.Filled.Edit"></MudLink>
-                <MudIconButton @onclick="() => OpenDeleteConfirmDialogAsync(context.Id)"
-                               Icon="@Icons.Material.Filled.Delete" Size="Size.Small" aria-label="delete" Color="Color.Error">
-                </MudIconButton>
-            </MudTd>
-        </RowTemplate>
-        <PagerContent>
-            <MudTablePager />
-        </PagerContent>
-    </MudTable>
-</div>
+                    <MudTd DataLabel="Name">@service.ServiceName</MudTd>
+                    <MudTd DataLabel="Capacity">@service.Port</MudTd>
+                    <MudTd DataLabel="Listening">@service.IsListening</MudTd>
+                    <MudTd DataLabel="Last Checked">@service.LastChecked</MudTd>
+                    <MudTd>
+                        <MudLink Href="@($"/servers/{ServerId}/disks/{service.Id.ToString()}")" Typo="Typo.subtitle1"
+                                 StartIcon="@Icons.Material.Filled.Edit"></MudLink>
+                        <MudIconButton @onclick="() => OpenDeleteConfirmDialogAsync(service.Id)"
+                                       Icon="@Icons.Material.Filled.Delete" Size="Size.Small" aria-label="delete"
+                                       Color="Color.Error">
+                        </MudIconButton>
+                    </MudTd>
+                </RowTemplate>
+                <PagerContent>
+                    <MudTablePager/>
+                </PagerContent>
+            </MudTable>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin></RedirectToLogin>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     [Parameter] public string? ServerId { get; set; }

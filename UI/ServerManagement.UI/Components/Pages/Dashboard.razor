@@ -1,9 +1,17 @@
 ﻿@page "/dashboard"
-@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using ServerManagement.UI.Components.Guards
 
-@attribute [Authorize]
+<AuthorizeView>
+    <Authorized>
+        <h3>Dashboard</h3>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin></RedirectToLogin>
+    </NotAuthorized>
+</AuthorizeView>
 
-<h3>Dashboard</h3>
+
 
 @code {
 
