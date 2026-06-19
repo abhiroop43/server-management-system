@@ -86,18 +86,28 @@
 
         if (response == null)
         {
-            Snackbar.Add("Something went wrong. Registration Failed.", Severity.Error);
+            Snackbar.Add("Something went wrong. Registration failed.", Severity.Error);
             return;
         }
 
-        if (!response.Succeeded)
+        if (!response.Success)
         {
             Snackbar.Add("Registration failed. Please check your input.", Severity.Error);
             return;
         }
 
-        Snackbar.Add("Something went wrong.", Severity.Success);
-        // var dialog = await DialogService.ShowAsync()
+        var parameters = new DialogParameters<ConfirmDialog>
+        {
+            { x => x.ContentText, "Please check your inbox to confirm your account." },
+            { x => x.ButtonText, "OK" },
+            { x => x.Color, Color.Success },
+            { x => x.NavigateTo, "/" }
+        };
+        var dialog = await DialogService.ShowAsync<ConfirmDialog>(
+            "Registration submitted",
+            parameters,
+            new DialogOptions { CloseOnEscapeKey = false }
+        );
     }
 
     private void ResetForm()

@@ -24,10 +24,13 @@
                                OnClick="@(e => DrawerToggle())"/>
             </Authorized>
         </AuthorizeView>
-        <MudImage Src="images/logo.png" Width="50" Height="50" Class="pb-1 pt-0"></MudImage>
-        <MudText Typo="Typo.h5" Class="ml-3">
+
+        <MudImage @onclick="RedirectToRoot" Style="cursor: pointer" Src="images/logo.png" Width="50" Height="50"
+                  Class="pb-1 pt-0"></MudImage>
+        <MudText @onclick="RedirectToRoot" Style="cursor: pointer" Typo="Typo.h5" Class="ml-3">
             Server Management System
         </MudText>
+
         <MudSpacer/>
 
         <MudIconButton Icon="@_themeIcon" Color="Color.Inherit" aria-label="toggle dark mode"
@@ -155,6 +158,11 @@
     private void RegisterButtonClicked()
     {
         NavigationManager.NavigateTo("/register");
+    }
+
+    private void RedirectToRoot()
+    {
+        NavigationManager.NavigateTo("/");
     }
 
     private async Task LogoutUserAsync()

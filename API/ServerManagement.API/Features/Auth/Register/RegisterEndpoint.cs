@@ -8,7 +8,7 @@ public record RegisterUserRequest(
     DateTime DateOfBirth
 );
 
-public record RegisterUserResponse(bool Succeeded);
+public record RegisterUserResponse(bool Success);
 
 public class RegisterEndpoint : ICarterModule
 {

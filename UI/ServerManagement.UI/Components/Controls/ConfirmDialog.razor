@@ -1,0 +1,32 @@
+﻿@inject NavigationManager NavigationManager
+
+<MudDialog>
+    <DialogContent>
+        @ContentText
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="@Color" Variant="Variant.Filled" @onclick="Submit">@ButtonText</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public required string ContentText { get; set; }
+
+    [Parameter] public required string ButtonText { get; set; }
+
+    [Parameter] public Color Color { get; set; }
+
+    [Parameter] public string? NavigateTo { get; set; }
+
+    private void Submit()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+
+        if (string.IsNullOrEmpty(NavigateTo)) return;
+
+        NavigationManager.NavigateTo(NavigateTo);
+    }
+
+}

@@ -1,13 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http.Extensions;
 
 namespace ServerManagement.API.Features.Auth.Register;
 
 public class RegisterCommandHandler(
     UserManager<ApplicationUser> userManager,
     IEmailSender<ApplicationUser> emailSender,
-    // IConfiguration configuration,
-    IHttpContextAccessor httpContextAccessor
+    IConfiguration configuration
 ) : ICommandHandler<RegisterUserCommand, RegisterUserResult>
 {
     public async Task<RegisterUserResult> Handle(
@@ -30,13 +28,11 @@ public class RegisterCommandHandler(
             var validationErrors = result.Errors.Select(err => $"{err.Code} : {err.Description}");
             throw new ValidationException(string.Join("; ", validationErrors));
         }
+
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-        // var confirmUrl =
-        //     $"{configuration["Frontend:BaseUrl"]}/auth/confirm-email?userId={user.Id}&token={Uri.EscapeDataString(token)}";
-
         var confirmUrl =
-            $"{httpContextAccessor.HttpContext?.Request?.GetDisplayUrl()}/auth/confirm-email?userId={user.Id}&token={Uri.EscapeDataString(token)}";
+            $"{configuration["Jwt:Issuer"]}/auth/confirm-email?userId={user.Id}&token={Uri.EscapeDataString(token)}";
 
         await emailSender.SendConfirmationLinkAsync(
             user,
