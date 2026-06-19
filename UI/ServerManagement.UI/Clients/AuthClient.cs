@@ -26,7 +26,11 @@ public class AuthClient(HttpClient client, IConfiguration configuration)
 
     public async Task<RegisterResponse?> Register(UserRegistration registerRequest)
     {
-        client.DefaultRequestHeaders.Add("Content-Type", "application/json");
+        if (registerRequest.Password != registerRequest.ConfirmPassword)
+        {
+            return new RegisterResponse(false);
+        }
+
         var response = await client.PostAsync(
             $"{_apiBaseUrl}/auth/register",
             new StringContent(

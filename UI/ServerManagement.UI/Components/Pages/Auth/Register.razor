@@ -1,8 +1,113 @@
 @page "/register"
 
+@inject AuthClient AuthClient
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+
 <PageTitle>Register</PageTitle>
 
-<MudText Typo="Typo.h3">Register New User</MudText>
+<MudText Typo="Typo.h3">If you are new here, please sign up</MudText>
+
+<EditForm Model="@_dataModel" OnValidSubmit="OnValidSubmitAsync">
+    <DataAnnotationsValidator/>
+    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-5">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudTextField Label="Email" HelperText="john.doe@example.com"
+                              @bind-Value="_dataModel.Email"
+                              For="@(() => _dataModel.Email)"/>
+
+                <MudTextField Label="First Name" HelperText="John"
+                              @bind-Value="_dataModel.FirstName"
+                              For="@(() => _dataModel.FirstName)"/>
+
+                <MudTextField Label="Last Name" HelperText="Doe"
+                              @bind-Value="_dataModel.LastName"
+                              For="@(() => _dataModel.LastName)"/>
+
+                <MudTextField Label="Password" InputType="InputType.Password"
+                              HelperText="************"
+                              @bind-Value="_dataModel.Password"
+                              For="@(() => _dataModel.Password)"
+                />
+
+                <MudTextField Label="Confirm Password" InputType="InputType.Password"
+                              HelperText="************"
+                              @bind-Value="_dataModel.ConfirmPassword"
+                              For="@(() => _dataModel.ConfirmPassword)"
+                />
+
+                <MudDatePicker Label="Date of Birth"
+                               @bind-Date="_dateOfBirth"
+                               DateFormat="dd-MMM-yyyy"
+                               ShowToolbar="false"/>
+
+            </MudCardContent>
+
+            <MudCardActions>
+                <MudButton ButtonType="ButtonType.Submit"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Class="mr-2">Register
+                </MudButton>
+                <MudButton ButtonType="ButtonType.Reset"
+                           Variant="Variant.Outlined"
+                           Color="Color.Default" Class="ml-2"
+                           @onclick="ResetForm">
+                    Reset
+                </MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudContainer>
+</EditForm>
+
+<MudDialog>
+    <DialogContent>
+        Registration submitted successfully. Please check your inbox to complete the signup process.
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Success" Variant="Variant.Filled" @onclick="RedirectToHome">OK</MudButton>
+    </DialogActions>
+</MudDialog>
 
 @code {
+    UserRegistration _dataModel = new();
+    private DateTime? _dateOfBirth;
+
+    private async Task OnValidSubmitAsync()
+    {
+        if (_dateOfBirth != null)
+        {
+            _dataModel.DateOfBirth = _dateOfBirth;
+        }
+
+        var response = await AuthClient.Register(_dataModel);
+
+        if (response == null)
+        {
+            Snackbar.Add("Something went wrong. Registration Failed.", Severity.Error);
+            return;
+        }
+
+        if (!response.Succeeded)
+        {
+            Snackbar.Add("Registration failed. Please check your input.", Severity.Error);
+            return;
+        }
+
+        Snackbar.Add("Something went wrong.", Severity.Success);
+        // var dialog = await DialogService.ShowAsync()
+    }
+
+    private void ResetForm()
+    {
+        _dataModel = new UserRegistration();
+        StateHasChanged();
+    }
+
+    private void RedirectToHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
 }

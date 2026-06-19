@@ -34,7 +34,7 @@ public class LoggingBehavior<TRequest, TResponse>(
         if (timeTaken.Seconds > 3)
         {
             logger.LogWarning(
-                "[PERFORMANCE] The reqyest {Request} took {TimeTaken} seconds",
+                "[PERFORMANCE] The request {Request} took {TimeTaken} seconds",
                 typeof(TRequest).Name,
                 timeTaken.Seconds
             );

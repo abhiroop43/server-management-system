@@ -5,7 +5,7 @@
 
 <h1>Hello,
     <AuthorizeView>
-        <Authorized>@context?.User?.Identity?.Name</Authorized>
+        <Authorized>@context?.User?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)?.Value</Authorized>
         <NotAuthorized>World!</NotAuthorized>
     </AuthorizeView>
 </h1>

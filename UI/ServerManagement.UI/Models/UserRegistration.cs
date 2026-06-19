@@ -18,5 +18,11 @@ public class UserRegistration
     [MaxLength(15, ErrorMessage = "Password must be at most 15 characters long.")]
     public string? Password { get; set; }
 
+    [Required(ErrorMessage = "Password is required.")]
+    [MinLength(8, ErrorMessage = "Password must be at least 8 characters long.")]
+    [MaxLength(15, ErrorMessage = "Password must be at most 15 characters long.")]
+    [Compare(nameof(Password), ErrorMessage = "Passwords do not match.")]
+    public string? ConfirmPassword { get; set; }
+
     public DateTime? DateOfBirth { get; set; }
 }
