@@ -1,6 +1,4 @@
-﻿using ServerManagement.Domain.Exceptions;
-
-namespace ServerManagement.Domain.ValueObjects;
+﻿namespace ServerManagement.Domain.ValueObjects;
 
 public record DiskId
 {
