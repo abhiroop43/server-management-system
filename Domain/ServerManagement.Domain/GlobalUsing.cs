@@ -4,6 +4,7 @@ global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
 global using ServerManagement.Domain.Abstractions;
 global using ServerManagement.Domain.CQRS;
+global using ServerManagement.Domain.Entities;
 global using ServerManagement.Domain.Enums;
 global using ServerManagement.Domain.Exceptions;
 global using ServerManagement.Domain.ValueObjects;

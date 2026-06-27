@@ -1,4 +1,6 @@
-﻿namespace ServerManagement.Domain.Entities;
+﻿using ServerManagement.Domain.Events;
+
+namespace ServerManagement.Domain.Entities;
 
 public class Disk : Aggregate<DiskId>
 {
@@ -36,7 +38,7 @@ public class Disk : Aggregate<DiskId>
             IsActive = true,
         };
 
-        // generate domain event
+        disk.AddDomainEvent(new DiskCreatedEvent(disk));
 
         return disk;
     }
@@ -55,13 +57,12 @@ public class Disk : Aggregate<DiskId>
         DiskType = diskType;
         IsActive = true;
 
-        // generate domain event
+        AddDomainEvent(new DiskUpdatedEvent(this));
     }
 
     public void Remove()
     {
         IsActive = false;
-
-        // generate domain event
+        AddDomainEvent(new DiskRemovedEvent(this));
     }
 }

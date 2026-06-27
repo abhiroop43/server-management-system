@@ -3,12 +3,9 @@ namespace ServerManagement.Domain.ValueObjects;
 public record DiskName
 {
     private const int MinLength = 3;
-    private const int MaxLength = 120;
+    private const int MaxLength = 128;
 
-    private DiskName(string value)
-    {
-        Value = value;
-    }
+    private DiskName(string value) => Value = value;
 
     public string Value { get; } = null!;
 
