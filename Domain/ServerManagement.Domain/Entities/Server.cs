@@ -1,3 +1,3 @@
 ﻿namespace ServerManagement.Domain.Entities;
 
-public class Server { }
+public class Server : Aggregate<ServerId> { }
