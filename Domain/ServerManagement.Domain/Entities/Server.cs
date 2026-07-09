@@ -51,7 +51,7 @@ public class Server : Aggregate<ServerId>
             MemoryInGb = memoryInGb,
         };
 
-        // generate domain event
+        server.AddDomainEvent(new ServerCreatedEvent(server));
 
         return server;
     }
@@ -72,7 +72,7 @@ public class Server : Aggregate<ServerId>
         MemoryInGb = memoryInGb;
         OwnerId = ownerId;
 
-        // generate domain event
+        AddDomainEvent(new ServerUpdatedEvent(this));
     }
 
     public void UpdateHealth(decimal healthScore)
@@ -84,42 +84,42 @@ public class Server : Aggregate<ServerId>
     {
         _disks.Add(disk);
 
-        // generate domain event
+        AddDomainEvent(new DiskAssignedToServerEvent(disk, this));
     }
 
     public void RemoveDisk(Disk disk)
     {
         _disks.Remove(disk);
 
-        // generate domain event
+        AddDomainEvent(new DiskRemovedFromServerEvent(disk, this));
     }
 
     public void AddHostedService(HostedService hostedService)
     {
         _hostedServices.Add(hostedService);
 
-        // generate domain event
+        AddDomainEvent(new ServiceCreatedOnServerEvent(hostedService, this));
     }
 
     public void RemoveHostedService(HostedService hostedService)
     {
         _hostedServices.Remove(hostedService);
 
-        // generate domain event
+        AddDomainEvent(new ServiceRemovedFromServerEvent(hostedService, this));
     }
 
     public void AddServerTag(string tag)
     {
         Tags.Add(tag);
 
-        // generate domain event
+        AddDomainEvent(new ServerTagAddedEvent(this));
     }
 
     public void RemoveServerTag(string tag)
     {
         Tags.Remove(tag);
 
-        // generate domain event
+        AddDomainEvent(new ServerTagRemovedEvent(this));
     }
 
     public void DecommissionServer()
@@ -127,6 +127,6 @@ public class Server : Aggregate<ServerId>
         Status = OperationStatus.Decommissioned;
         DecommissionedAt = DateTimeOffset.Now;
 
-        // generate domain event
+        AddDomainEvent(new ServerDecommissionedEvent(this));
     }
 }

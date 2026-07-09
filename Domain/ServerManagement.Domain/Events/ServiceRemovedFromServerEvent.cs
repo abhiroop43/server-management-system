@@ -1,3 +1,4 @@
 ﻿namespace ServerManagement.Domain.Events;
 
-public record ServiceRemovedFromServerEvent();
+public record ServiceRemovedFromServerEvent(HostedService HostedService, Server Server)
+    : IDomainEvent;

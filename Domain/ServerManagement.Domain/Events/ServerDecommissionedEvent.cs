@@ -1,3 +1,3 @@
 ﻿namespace ServerManagement.Domain.Events;
 
-public record ServerDecommissionedEvent();
+public record ServerDecommissionedEvent(Server Server) : IDomainEvent;

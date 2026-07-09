@@ -1,6 +1,4 @@
-﻿using ServerManagement.Domain.Events;
-
-namespace ServerManagement.Domain.Entities;
+﻿namespace ServerManagement.Domain.Entities;
 
 public class Disk : Aggregate<DiskId>
 {

@@ -6,5 +6,6 @@ global using ServerManagement.Domain.Abstractions;
 global using ServerManagement.Domain.CQRS;
 global using ServerManagement.Domain.Entities;
 global using ServerManagement.Domain.Enums;
+global using ServerManagement.Domain.Events;
 global using ServerManagement.Domain.Exceptions;
 global using ServerManagement.Domain.ValueObjects;

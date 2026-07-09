@@ -1,3 +1,3 @@
 ﻿namespace ServerManagement.Domain.Events;
 
-public record DiskAssignedToServerEvent();
+public record DiskAssignedToServerEvent(Disk Disk, Server Server) : IDomainEvent;

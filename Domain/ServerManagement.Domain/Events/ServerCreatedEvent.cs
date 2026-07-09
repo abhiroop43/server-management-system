@@ -1,3 +1,3 @@
 ﻿namespace ServerManagement.Domain.Events;
 
-public record ServerCreatedEvent();
+public record ServerCreatedEvent(Server Server) : IDomainEvent;
