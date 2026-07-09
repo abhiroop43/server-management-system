@@ -2,10 +2,14 @@
 global using System.Text;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.IdentityModel.JsonWebTokens;
 global using Microsoft.IdentityModel.Tokens;
 global using Resend;
+global using ServerManagement.Domain.Entities;
+global using ServerManagement.Domain.Enums;
+global using ServerManagement.Domain.ValueObjects;
 global using ServerManagement.Infrastructure.Auth;
 global using ServerManagement.Infrastructure.Data;

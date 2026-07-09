@@ -11,24 +11,24 @@ public class Server : Aggregate<ServerId>
     public HostName HostName { get; private set; } = null!;
     public PrimaryIpAddress PrimaryIpAddress { get; private set; } = null!;
     public List<string> IpAddresses { get; private set; } = [];
-    public int CpuCores { get; set; }
-    public double MemoryInGb { get; set; }
+    public int CpuCores { get; private set; }
+    public double MemoryInGb { get; private set; }
     public IReadOnlyList<Disk> Disks => _disks.AsReadOnly();
-    public TimeSpan UpTime { get; set; }
-    public DateTimeOffset LastSeen { get; set; } = DateTime.Now;
+    public TimeSpan UpTime { get; private set; }
+    public DateTimeOffset LastSeen { get; private set; } = DateTime.Now;
 
-    public DateTimeOffset? DecommissionedAt { get; set; }
+    public DateTimeOffset? DecommissionedAt { get; private set; }
 
-    public decimal HealthScore { get; set; }
+    public decimal HealthScore { get; private set; }
 
-    public List<string> Tags { get; set; } = [];
+    public List<string> Tags { get; private set; } = [];
 
-    public Dictionary<string, string> Metadata { get; set; } = null!;
+    public Dictionary<string, string> Metadata { get; private set; } = null!;
 
-    public Guid? OwnerId { get; set; }
+    public Guid? OwnerId { get; private set; }
     public IReadOnlyList<HostedService> Services => _hostedServices.AsReadOnly();
 
-    public string Notes { get; set; } = null!;
+    public string? Notes { get; private set; }
 
     public static Server Create(
         ServerId serverId,
@@ -37,7 +37,12 @@ public class Server : Aggregate<ServerId>
         HostName hostName,
         PrimaryIpAddress primaryIpAddress,
         int cpuCores,
-        double memoryInGb
+        double memoryInGb,
+        string? notes,
+        OperationStatus operationStatus,
+        List<string> tags,
+        Dictionary<string, string> metadata,
+        List<string> ipAddresses
     )
     {
         var server = new Server
@@ -49,6 +54,11 @@ public class Server : Aggregate<ServerId>
             PrimaryIpAddress = primaryIpAddress,
             CpuCores = cpuCores,
             MemoryInGb = memoryInGb,
+            Notes = notes,
+            Status = operationStatus,
+            Tags = tags,
+            Metadata = metadata,
+            IpAddresses = ipAddresses,
         };
 
         server.AddDomainEvent(new ServerCreatedEvent(server));
@@ -77,7 +87,14 @@ public class Server : Aggregate<ServerId>
 
     public void UpdateHealth(decimal healthScore)
     {
-        this.HealthScore = healthScore;
+        HealthScore = healthScore;
+    }
+
+    public void UpdateUpTime()
+    {
+        if (Status != OperationStatus.Running)
+            return;
+        UpTime = (DateTime.Now - CreatedDate)!.Value;
     }
 
     public void AddDisk(Disk disk)
