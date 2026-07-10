@@ -15,7 +15,7 @@ public class Server : Aggregate<ServerId>
     public double MemoryInGb { get; private set; }
     public IReadOnlyList<Disk> Disks => _disks.AsReadOnly();
     public TimeSpan UpTime { get; private set; }
-    public DateTimeOffset LastSeen { get; private set; } = DateTime.Now;
+    public DateTimeOffset LastSeen { get; private set; } = DateTime.UtcNow;
 
     public DateTimeOffset? DecommissionedAt { get; private set; }
 
@@ -94,7 +94,7 @@ public class Server : Aggregate<ServerId>
     {
         if (Status != OperationStatus.Running)
             return;
-        UpTime = (DateTime.Now - CreatedDate)!.Value;
+        UpTime = (DateTime.UtcNow - CreatedDate)!.Value;
     }
 
     public void AddDisk(Disk disk)
