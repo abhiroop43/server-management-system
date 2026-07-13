@@ -11,7 +11,6 @@ public class ApplicationIdentityDbContext(DbContextOptions<ApplicationIdentityDb
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         builder.HasDefaultSchema(DefaultSchema);
         base.OnModelCreating(builder);
     }
