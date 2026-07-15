@@ -2,9 +2,10 @@ using ServerManagement.Infrastructure.Data.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDomainServices();
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddApiServices(builder.Configuration);
+builder
+    .Services.AddDomainServices()
+    .AddInfrastructureServices(builder.Configuration)
+    .AddApiServices(builder.Configuration);
 
 var app = builder.Build();
 

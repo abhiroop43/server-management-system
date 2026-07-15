@@ -40,7 +40,7 @@ public static class DependencyInjection
 
         app.MapCarter();
 
-        app.UseExceptionHandler(options => { });
+        app.UseExceptionHandler(opts => { });
 
         app.UseHealthChecks(
             "/health",

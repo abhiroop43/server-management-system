@@ -78,7 +78,7 @@ public class CustomExceptionHandler(
 
         if (exception is ValidationException validationException)
             problemDetails.Extensions.Add("ValidationErrors", validationException.Errors);
-
+        httpContext.Response.StatusCode = statusCode;
         await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
         return true;

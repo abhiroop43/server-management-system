@@ -3,8 +3,6 @@ using ServerManagement.Domain.Pagination;
 
 namespace ServerManagement.API.Features.Disk.GetDisks;
 
-public record GetDisksRequest(int pageIndex, int pageSize);
-
 public record GetDisksResponse(PaginationResult<DiskDto> Disks);
 
 public class GetDisksEndpoint : ICarterModule
@@ -13,7 +11,27 @@ public class GetDisksEndpoint : ICarterModule
     {
         app.MapGet(
                 "/disks",
-                async ([FromQuery] int pageNumber, [FromQuery] int pageSize, ISender sender) => { }
+                async (
+                    [FromQuery] Guid serverId,
+                    [FromQuery] int pageNumber,
+                    [FromQuery] int pageSize,
+                    ISender sender
+                ) =>
+                {
+                    var query = new GetDisksQuery(
+                        ServerId.Of(serverId),
+                        new PaginationRequest((pageNumber - 1), pageSize)
+                    );
+
+                    var result = await sender.Send(query);
+
+                    var response = result.Adapt<GetDisksResponse>();
+                    var apiResponse = new ApiResponseDto(0, "Disks fetched successfully", response);
+
+                    return response.Disks.Count > 0
+                        ? Results.Ok(apiResponse)
+                        : throw new NotFoundException("No disks found for this server");
+                }
             )
             .WithName("GetDisks")
             .Produces<GetDisksResponse>()

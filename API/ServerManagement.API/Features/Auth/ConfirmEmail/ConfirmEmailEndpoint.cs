@@ -1,7 +1,5 @@
 ﻿namespace ServerManagement.API.Features.Auth.ConfirmEmail;
 
-public record ConfirmEmailRequest(string? UserId, string? Token);
-
 public record ConfirmEmailResponse(bool Success);
 
 public class ConfirmEmailEndpoint : ICarterModule
@@ -18,7 +16,9 @@ public class ConfirmEmailEndpoint : ICarterModule
 
                     var response = result.Adapt<ConfirmEmailResponse>();
 
-                    return response.Success ? Results.Ok(response) : Results.BadRequest(response);
+                    return response.Success
+                        ? Results.Ok(response)
+                        : throw new BadRequestException("No disks configured for this server");
                 }
             )
             .WithName("Confirm Email")
