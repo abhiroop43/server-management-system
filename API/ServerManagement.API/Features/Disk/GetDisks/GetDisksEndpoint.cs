@@ -35,7 +35,7 @@ public class GetDisksEndpoint : ICarterModule
             )
             .WithName("GetDisks")
             .Produces<GetDisksResponse>()
-            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .WithSummary("Get disks in a server")
             .WithDescription("Get paginated list of disks installed in a server");
     }

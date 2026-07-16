@@ -21,6 +21,8 @@ public class Server : Aggregate<ServerId>
 
     public decimal HealthScore { get; private set; }
 
+    public string GeographicRegion { get; set; }
+
     public List<string> Tags { get; private set; } = [];
 
     public Dictionary<string, string> Metadata { get; private set; } = null!;
