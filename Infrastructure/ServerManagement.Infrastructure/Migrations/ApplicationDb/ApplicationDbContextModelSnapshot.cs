@@ -171,6 +171,9 @@ namespace ServerManagement.Infrastructure.Migrations.ApplicationDb
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OperatingSystem")
+                        .HasColumnType("int");
+
                     b.Property<Guid?>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 

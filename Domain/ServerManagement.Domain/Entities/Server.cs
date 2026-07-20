@@ -1,4 +1,6 @@
-﻿namespace ServerManagement.Domain.Entities;
+﻿using OperatingSystem = ServerManagement.Domain.Enums.OperatingSystem;
+
+namespace ServerManagement.Domain.Entities;
 
 public class Server : Aggregate<ServerId>
 {
@@ -8,6 +10,7 @@ public class Server : Aggregate<ServerId>
     public ServerName Name { get; private set; } = null!;
     public bool IsOnline { get; private set; } = true;
     public OperationStatus Status { get; private set; } = OperationStatus.Running;
+    public OperatingSystem OperatingSystem { get; private set; }
     public HostName HostName { get; private set; } = null!;
     public PrimaryIpAddress PrimaryIpAddress { get; private set; } = null!;
     public List<string> IpAddresses { get; private set; } = [];
@@ -44,7 +47,8 @@ public class Server : Aggregate<ServerId>
         OperationStatus operationStatus,
         List<string> tags,
         Dictionary<string, string> metadata,
-        List<string> ipAddresses
+        List<string> ipAddresses,
+        OperatingSystem operatingSystem
     )
     {
         var server = new Server
@@ -61,6 +65,7 @@ public class Server : Aggregate<ServerId>
             Tags = tags,
             Metadata = metadata,
             IpAddresses = ipAddresses,
+            OperatingSystem = operatingSystem,
         };
 
         server.AddDomainEvent(new ServerCreatedEvent(server));
@@ -74,7 +79,10 @@ public class Server : Aggregate<ServerId>
         PrimaryIpAddress primaryIpAddress,
         int cpuCores,
         double memoryInGb,
-        Guid? ownerId
+        Guid? ownerId,
+        List<string> ipAddresses,
+        string notes,
+        Dictionary<string, string> metadata
     )
     {
         Name = name;
@@ -83,6 +91,9 @@ public class Server : Aggregate<ServerId>
         CpuCores = cpuCores;
         MemoryInGb = memoryInGb;
         OwnerId = ownerId;
+        IpAddresses = ipAddresses;
+        Notes = notes;
+        Metadata = metadata;
 
         AddDomainEvent(new ServerUpdatedEvent(this));
     }
