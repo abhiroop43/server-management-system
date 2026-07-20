@@ -1,4 +1,5 @@
-﻿using ServerManagement.API.Dtos;
+﻿using Microsoft.AspNetCore.Authorization;
+using ServerManagement.API.Dtos;
 using ServerManagement.Domain.Pagination;
 
 namespace ServerManagement.API.Features.Disk.GetDisks;
@@ -33,6 +34,7 @@ public class GetDisksEndpoint : ICarterModule
                         : throw new NotFoundException("No disks found for this server");
                 }
             )
+            .RequireAuthorization()
             .WithName("GetDisks")
             .Produces<GetDisksResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)

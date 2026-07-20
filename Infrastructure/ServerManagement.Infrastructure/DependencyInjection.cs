@@ -1,4 +1,5 @@
-﻿using ServerManagement.Infrastructure.Auth.Interfaces;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ServerManagement.Infrastructure.Auth.Interfaces;
 using ServerManagement.Infrastructure.External;
 using ServerManagement.Infrastructure.Services;
 
@@ -31,7 +32,11 @@ public static class DependencyInjection
             .AddDefaultTokenProviders();
 
         services
-            .AddAuthentication()
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters

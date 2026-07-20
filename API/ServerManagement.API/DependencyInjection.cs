@@ -1,3 +1,6 @@
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+
 namespace ServerManagement.API;
 
 public static class DependencyInjection
@@ -20,6 +23,8 @@ public static class DependencyInjection
             .AddHealthChecks()
             .AddSqlServer(configuration.GetConnectionString("ServerManagement")!);
 
+        services.AddAuthorization();
+
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
@@ -37,6 +42,9 @@ public static class DependencyInjection
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapCarter();
 
