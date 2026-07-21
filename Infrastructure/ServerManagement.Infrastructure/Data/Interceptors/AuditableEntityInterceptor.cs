@@ -5,7 +5,7 @@ using ServerManagement.Infrastructure.Data.Extensions;
 
 namespace ServerManagement.Infrastructure.Data.Interceptors;
 
-public class AuditableEntityInterceptor(HttpContextAccessor httpContextAccessor)
+public class AuditableEntityInterceptor(IHttpContextAccessor httpContextAccessor)
     : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(
@@ -15,6 +15,16 @@ public class AuditableEntityInterceptor(HttpContextAccessor httpContextAccessor)
     {
         UpdateEntities(eventData.Context);
         return base.SavingChanges(eventData, result);
+    }
+
+    public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+        DbContextEventData eventData,
+        InterceptionResult<int> result,
+        CancellationToken cancellationToken = new CancellationToken()
+    )
+    {
+        UpdateEntities(eventData.Context);
+        return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
     private void UpdateEntities(DbContext? dbContext)

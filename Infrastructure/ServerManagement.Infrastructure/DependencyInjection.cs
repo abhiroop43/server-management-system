@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using ServerManagement.Infrastructure.Auth.Interfaces;
+using ServerManagement.Infrastructure.Data.Interceptors;
 using ServerManagement.Infrastructure.External;
 using ServerManagement.Infrastructure.Services;
 
@@ -13,13 +15,20 @@ public static class DependencyInjection
     )
     {
         var connectionString = configuration.GetConnectionString("ServerManagement");
+        services.AddHttpContextAccessor();
+        services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
 
         services.AddDbContext<ApplicationIdentityDbContext>(options =>
             options.UseSqlServer(connectionString).EnableSensitiveDataLogging()
         );
 
-        services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(connectionString).EnableSensitiveDataLogging()
+        services.AddDbContext<ApplicationDbContext>(
+            (sp, options) =>
+            {
+                options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
+                options.UseSqlServer(connectionString).EnableSensitiveDataLogging();
+            }
         );
 
         services
