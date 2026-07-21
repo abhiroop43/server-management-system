@@ -20,7 +20,7 @@ public class Server : Aggregate<ServerId>
 
     public DateTimeOffset? DecommissionedAt { get; private set; }
 
-    public decimal HealthScore { get; private set; }
+    public decimal HealthScore { get; private set; } = 100;
 
     public string GeographicRegion { get; private set; } = null!;
 
@@ -33,11 +33,43 @@ public class Server : Aggregate<ServerId>
 
     public string? Notes { get; private set; } = null!;
 
-    public static Server Create(Server newServer)
+    public static Server Create(
+        ServerId serverId,
+        Guid? ownerId,
+        ServerName name,
+        HostName hostName,
+        PrimaryIpAddress primaryIpAddress,
+        int cpuCores,
+        double memoryInGb,
+        string? notes,
+        OperationStatus operationStatus,
+        List<string> tags,
+        Dictionary<string, string> metadata,
+        List<string> ipAddresses,
+        Enums.OperatingSystem operatingSystem,
+        string geographicRegion
+    )
     {
-        newServer.AddDomainEvent(new ServerCreatedEvent(newServer));
+        var server = new Server
+        {
+            Id = serverId,
+            OwnerId = ownerId,
+            Name = name,
+            HostName = hostName,
+            PrimaryIpAddress = primaryIpAddress,
+            CpuCores = cpuCores,
+            MemoryInGb = memoryInGb,
+            Notes = notes,
+            Status = operationStatus,
+            Tags = tags,
+            Metadata = metadata,
+            IpAddresses = ipAddresses,
+            OperatingSystem = operatingSystem,
+            GeographicRegion = geographicRegion,
+        };
+        server.AddDomainEvent(new ServerCreatedEvent(server));
 
-        return newServer;
+        return server;
     }
 
     public void Update(Server updatedServer)

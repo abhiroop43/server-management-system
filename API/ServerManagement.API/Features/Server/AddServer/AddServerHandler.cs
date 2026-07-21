@@ -8,11 +8,27 @@ public class AddServerHandler(ApplicationDbContext dbContext)
         CancellationToken cancellationToken
     )
     {
-        var server = command.Adapt<Domain.Entities.Server>();
-        Domain.Entities.Server.Create(server);
-        dbContext.Servers.Add(server);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        var serverId = Guid.NewGuid();
 
-        return new AddServerResult(true);
+        var server = Domain.Entities.Server.Create(
+            ServerId.Of(serverId),
+            command.OwnerId,
+            ServerName.Of(command.Name),
+            HostName.Of(command.HostName),
+            PrimaryIpAddress.Of(command.PrimaryIp),
+            command.CpuCores,
+            command.MemoryInGb,
+            command.Notes,
+            command.Status,
+            command.Tags,
+            command.Metadata,
+            command.IpAddresses,
+            command.OperatingSystem,
+            command.GeographicRegion
+        );
+        dbContext.Servers.Add(server);
+        var savedRecords = await dbContext.SaveChangesAsync(cancellationToken);
+
+        return new AddServerResult(savedRecords > 0);
     }
 }

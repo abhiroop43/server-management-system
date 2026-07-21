@@ -27,7 +27,11 @@ public class GetDisksEndpoint : ICarterModule
                     var result = await sender.Send(query);
 
                     var response = result.Adapt<GetDisksResponse>();
-                    var apiResponse = new ApiResponseDto(0, "Disks fetched successfully", response);
+                    var apiResponse = new ApiResponseDto(
+                        StatusCodes.Status200OK,
+                        "Disks fetched successfully",
+                        response
+                    );
 
                     return response.Disks.Count > 0
                         ? Results.Ok(apiResponse)

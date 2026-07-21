@@ -4,7 +4,6 @@ namespace ServerManagement.API.Features.Server.AddServer;
 
 public record AddServerCommand(
     string Name,
-    bool IsOnline,
     Domain.Enums.OperationStatus Status,
     string HostName,
     string PrimaryIp,
@@ -14,10 +13,6 @@ public record AddServerCommand(
     string GeographicRegion,
     int CpuCores,
     double MemoryInGb,
-    TimeSpan Uptime,
-    DateTimeOffset LastSeen,
-    DateTimeOffset? DecommissionedAt,
-    decimal HealthScore,
     List<string> Tags,
     Dictionary<string, string> Metadata,
     Guid? OwnerId,

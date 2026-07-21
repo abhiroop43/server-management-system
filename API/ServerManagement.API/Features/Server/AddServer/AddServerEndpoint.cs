@@ -2,20 +2,15 @@
 
 public record AddServerRequest(
     string Name,
-    bool IsOnline,
-    Domain.Enums.OperationStatus Status,
+    string Status,
     string HostName,
     string PrimaryIp,
     List<string> IpAddresses,
     string MacAddress,
-    Domain.Enums.OperatingSystem OperatingSystem,
+    string OperatingSystem,
     string GeographicRegion,
     int CpuCores,
     double MemoryInGb,
-    TimeSpan Uptime,
-    DateTimeOffset LastSeen,
-    DateTimeOffset? DecommissionedAt,
-    decimal HealthScore,
     List<string> Tags,
     Dictionary<string, string> Metadata,
     Guid? OwnerId,
@@ -30,7 +25,7 @@ public class AddServerEndpoint : ICarterModule
     {
         app.MapPost(
                 "/server",
-                async ([FromBody] AddServerRequest addServerRequest, ISender sender) =>
+                async (AddServerRequest addServerRequest, ISender sender) =>
                 {
                     var command = addServerRequest.Adapt<AddServerCommand>();
                     var result = await sender.Send(command);
@@ -46,7 +41,11 @@ public class AddServerEndpoint : ICarterModule
                             )
                         );
 
-                    var apiResponse = new ApiResponseDto(0, "Server added successfully", response);
+                    var apiResponse = new ApiResponseDto(
+                        StatusCodes.Status200OK,
+                        "Server added successfully",
+                        response
+                    );
                     return Results.Ok(apiResponse);
                 }
             )
