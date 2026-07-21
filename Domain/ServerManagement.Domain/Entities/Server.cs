@@ -1,6 +1,4 @@
-﻿using OperatingSystem = ServerManagement.Domain.Enums.OperatingSystem;
-
-namespace ServerManagement.Domain.Entities;
+﻿namespace ServerManagement.Domain.Entities;
 
 public class Server : Aggregate<ServerId>
 {
@@ -10,7 +8,7 @@ public class Server : Aggregate<ServerId>
     public ServerName Name { get; private set; } = null!;
     public bool IsOnline { get; private set; } = true;
     public OperationStatus Status { get; private set; } = OperationStatus.Running;
-    public OperatingSystem OperatingSystem { get; private set; }
+    public Enums.OperatingSystem OperatingSystem { get; private set; }
     public HostName HostName { get; private set; } = null!;
     public PrimaryIpAddress PrimaryIpAddress { get; private set; } = null!;
     public List<string> IpAddresses { get; private set; } = [];
@@ -24,7 +22,7 @@ public class Server : Aggregate<ServerId>
 
     public decimal HealthScore { get; private set; }
 
-    public string GeographicRegion { get; set; }
+    public string GeographicRegion { get; private set; } = null!;
 
     public List<string> Tags { get; private set; } = [];
 
@@ -33,67 +31,27 @@ public class Server : Aggregate<ServerId>
     public Guid? OwnerId { get; private set; }
     public IReadOnlyList<HostedService> Services => _hostedServices.AsReadOnly();
 
-    public string? Notes { get; private set; }
+    public string? Notes { get; private set; } = null!;
 
-    public static Server Create(
-        ServerId serverId,
-        Guid? ownerId,
-        ServerName name,
-        HostName hostName,
-        PrimaryIpAddress primaryIpAddress,
-        int cpuCores,
-        double memoryInGb,
-        string? notes,
-        OperationStatus operationStatus,
-        List<string> tags,
-        Dictionary<string, string> metadata,
-        List<string> ipAddresses,
-        OperatingSystem operatingSystem
-    )
+    public static Server Create(Server newServer)
     {
-        var server = new Server
-        {
-            Id = serverId,
-            OwnerId = ownerId,
-            Name = name,
-            HostName = hostName,
-            PrimaryIpAddress = primaryIpAddress,
-            CpuCores = cpuCores,
-            MemoryInGb = memoryInGb,
-            Notes = notes,
-            Status = operationStatus,
-            Tags = tags,
-            Metadata = metadata,
-            IpAddresses = ipAddresses,
-            OperatingSystem = operatingSystem,
-        };
+        newServer.AddDomainEvent(new ServerCreatedEvent(newServer));
 
-        server.AddDomainEvent(new ServerCreatedEvent(server));
-
-        return server;
+        return newServer;
     }
 
-    public void Update(
-        ServerName name,
-        HostName hostName,
-        PrimaryIpAddress primaryIpAddress,
-        int cpuCores,
-        double memoryInGb,
-        Guid? ownerId,
-        List<string> ipAddresses,
-        string notes,
-        Dictionary<string, string> metadata
-    )
+    public void Update(Server updatedServer)
     {
-        Name = name;
-        HostName = hostName;
-        PrimaryIpAddress = primaryIpAddress;
-        CpuCores = cpuCores;
-        MemoryInGb = memoryInGb;
-        OwnerId = ownerId;
-        IpAddresses = ipAddresses;
-        Notes = notes;
-        Metadata = metadata;
+        Name = updatedServer.Name;
+        HostName = updatedServer.HostName;
+        PrimaryIpAddress = updatedServer.PrimaryIpAddress;
+        CpuCores = updatedServer.CpuCores;
+        MemoryInGb = updatedServer.MemoryInGb;
+        OwnerId = updatedServer.OwnerId;
+        Tags = updatedServer.Tags;
+        Metadata = updatedServer.Metadata;
+        IpAddresses = updatedServer.IpAddresses;
+        GeographicRegion = updatedServer.GeographicRegion;
 
         AddDomainEvent(new ServerUpdatedEvent(this));
     }
