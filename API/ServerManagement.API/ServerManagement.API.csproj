@@ -27,7 +27,6 @@
   <ItemGroup>
     <Folder Include="Features\HostedService\GetHostedServices\" />
     <Folder Include="Features\Server\DecommissionServer\" />
-    <Folder Include="Features\Server\GetServerDetails\" />
     <Folder Include="Features\Server\UpdateServer\" />
   </ItemGroup>
 </Project>
