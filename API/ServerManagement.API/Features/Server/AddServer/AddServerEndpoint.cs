@@ -24,7 +24,7 @@ public class AddServerEndpoint : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost(
-                "/server",
+                "/servers",
                 async (AddServerRequest addServerRequest, ISender sender) =>
                 {
                     var command = addServerRequest.Adapt<AddServerCommand>();

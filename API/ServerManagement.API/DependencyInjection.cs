@@ -30,6 +30,9 @@ public static class DependencyInjection
 
         services.AddHttpContextAccessor();
 
+        TypeAdapterConfig.GlobalSettings.Scan(typeof(Program).Assembly);
+        services.AddSingleton(TypeAdapterConfig.GlobalSettings);
+
         return services;
     }
 

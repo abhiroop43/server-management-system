@@ -25,7 +25,7 @@ public class GetDisksQueryHandler(ApplicationDbContext dbContext)
         var disksDto = disks.Adapt<List<DiskDto>>();
 
         var result = new PaginationResult<DiskDto>(
-            query.PaginationRequest.PageIndex,
+            (query.PaginationRequest.PageIndex + 1),
             query.PaginationRequest.PageSize,
             totalDisks,
             disksDto

@@ -1,3 +1,9 @@
 ﻿namespace ServerManagement.API.Dtos;
 
-public record HostedServiceDto();
+public record HostedServiceDto(
+    Guid Id,
+    string ServiceName,
+    int Port,
+    bool IsListening,
+    DateTimeOffset LastChecked
+);
