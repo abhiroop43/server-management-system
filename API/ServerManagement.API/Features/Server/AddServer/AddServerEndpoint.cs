@@ -17,7 +17,7 @@ public record AddServerRequest(
     string Notes
 );
 
-public record AddServerResponse(bool Success);
+public record AddServerResponse(Guid Id, bool Success);
 
 public class AddServerEndpoint : ICarterModule
 {
@@ -42,11 +42,11 @@ public class AddServerEndpoint : ICarterModule
                         );
 
                     var apiResponse = new ApiResponseDto(
-                        StatusCodes.Status200OK,
+                        StatusCodes.Status201Created,
                         "Server added successfully",
                         response
                     );
-                    return Results.Ok(apiResponse);
+                    return Results.Created($"/servers/{response.Id}", apiResponse);
                 }
             )
             .RequireAuthorization()

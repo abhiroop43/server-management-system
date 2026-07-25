@@ -1,4 +1,6 @@
-﻿namespace ServerManagement.API.Features.Server.Mapping;
+﻿using ServerManagement.API.Features.Server.GetServerDetails;
+
+namespace ServerManagement.API.Features.Server.Mapping;
 
 public class ServerMappingConfig : IRegister
 {
@@ -10,5 +12,13 @@ public class ServerMappingConfig : IRegister
             .Map(dto => dto.Name, ent => ent.Name.Value)
             .Map(dto => dto.HostName, ent => ent.HostName.Value)
             .Map(dto => dto.PrimaryIpAddress, ent => ent.PrimaryIpAddress.Value);
+
+        config
+            .NewConfig<Domain.Entities.Server, GetServerDetailsResult>()
+            .Map(dto => dto.Id, ent => ent.Id.Value)
+            .Map(dto => dto.Name, ent => ent.Name.Value)
+            .Map(dto => dto.HostName, ent => ent.HostName.Value)
+            .Map(dto => dto.PrimaryIpAddress, ent => ent.PrimaryIpAddress.Value)
+            .Map(dto => dto.UpTime, ent => ent.UpTime.ToString());
     }
 }

@@ -28,7 +28,8 @@ public class AddServerHandler(ApplicationDbContext dbContext)
         );
         dbContext.Servers.Add(server);
         var savedRecords = await dbContext.SaveChangesAsync(cancellationToken);
-
-        return new AddServerResult(savedRecords > 0);
+        return savedRecords > 0
+            ? new AddServerResult(server.Id.Value, true)
+            : new AddServerResult(Guid.Empty, false);
     }
 }

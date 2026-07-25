@@ -19,7 +19,7 @@ public record AddServerCommand(
     string Notes
 ) : ICommand<AddServerResult>;
 
-public record AddServerResult(bool Success);
+public record AddServerResult(Guid Id, bool Success);
 
 public class AddServerCommandValidator : AbstractValidator<AddServerCommand>
 {
