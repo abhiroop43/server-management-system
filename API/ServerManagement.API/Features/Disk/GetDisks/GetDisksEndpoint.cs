@@ -44,7 +44,7 @@ public class GetDisksEndpoint : ICarterModule
             )
             .RequireAuthorization()
             .WithName("GetDisks")
-            .Produces<GetDisksResponse>()
+            .Produces<ApiResponseDto>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .WithSummary("Get disks in a server")
             .WithDescription("Get paginated list of disks installed in a server");

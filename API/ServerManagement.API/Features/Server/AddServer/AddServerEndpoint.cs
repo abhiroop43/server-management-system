@@ -48,7 +48,7 @@ public class AddServerEndpoint : ICarterModule
             )
             .RequireAuthorization()
             .WithName("AddServer")
-            .Produces<AddServerResponse>()
+            .Produces<ApiResponseDto>()
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Add Server")
             .WithDescription("Create a new server");
