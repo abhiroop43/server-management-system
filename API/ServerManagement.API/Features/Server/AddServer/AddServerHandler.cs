@@ -9,7 +9,6 @@ public class AddServerHandler(ApplicationDbContext dbContext)
     )
     {
         var serverId = Guid.NewGuid();
-
         var server = Domain.Entities.Server.Create(
             ServerId.Of(serverId),
             command.OwnerId,
@@ -28,7 +27,8 @@ public class AddServerHandler(ApplicationDbContext dbContext)
         );
         dbContext.Servers.Add(server);
         var savedRecords = await dbContext.SaveChangesAsync(cancellationToken);
-
-        return new AddServerResult(savedRecords > 0);
+        return savedRecords > 0
+            ? new AddServerResult(server.Id.Value, true)
+            : new AddServerResult(Guid.Empty, false);
     }
 }
