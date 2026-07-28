@@ -34,5 +34,6 @@ public class UpdateServerCommandValidator : AbstractValidator<UpdateServerComman
         RuleFor(x => x.CpuCores).GreaterThan(0).WithMessage(GreaterThanZeroErrorMessage);
         RuleFor(x => x.MemoryInGb).GreaterThan(0).WithMessage(GreaterThanZeroErrorMessage);
         // validate if OwnerId belongs to an active user
+        // validate if server Id exists in database
     }
 }

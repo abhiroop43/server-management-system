@@ -20,7 +20,11 @@ public record GetServerDetailsResult(
     string GeographicRegion,
     List<string> Tags,
     Dictionary<string, string> Metadata,
-    Guid? OwnerId
+    Guid? OwnerId,
+    string? CreatedBy,
+    DateTime? CreatedDate,
+    string? UpdatedBy,
+    DateTime? UpdatedDate
 );
 
 public class GetServerDetailsQueryHandler(ApplicationDbContext dbContext)

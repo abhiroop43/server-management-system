@@ -6,5 +6,9 @@ public record ServerDto(
     bool IsOnline,
     string Status,
     string HostName,
-    string PrimaryIpAddress
+    string PrimaryIpAddress,
+    string? CreatedBy,
+    DateTime? CreatedDate,
+    string? UpdatedBy,
+    DateTime? UpdatedDate
 );

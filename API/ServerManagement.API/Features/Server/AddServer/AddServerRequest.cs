@@ -24,7 +24,9 @@ public record AddServerResult(Guid Id, bool Success);
 public class AddServerCommandValidator : AbstractValidator<AddServerCommand>
 {
     private const string RequiredFieldErrorMessage = "{PropertyName} cannot be empty";
-    private const string GreaterThanZeroErrorMessage = "{PropertyName} must be greater than 0";
+
+    private const string GreaterThanErrorMessage =
+        "{PropertyName} must be greater than {MinLength}";
 
     public AddServerCommandValidator()
     {
@@ -33,8 +35,8 @@ public class AddServerCommandValidator : AbstractValidator<AddServerCommand>
         RuleFor(x => x.PrimaryIp).NotEmpty().WithMessage(RequiredFieldErrorMessage);
         RuleFor(x => x.MacAddress).NotEmpty().WithMessage(RequiredFieldErrorMessage);
         RuleFor(x => x.HostName).NotEmpty().WithMessage(RequiredFieldErrorMessage);
-        RuleFor(x => x.CpuCores).GreaterThan(0).WithMessage(GreaterThanZeroErrorMessage);
-        RuleFor(x => x.MemoryInGb).GreaterThan(0).WithMessage(GreaterThanZeroErrorMessage);
+        RuleFor(x => x.CpuCores).GreaterThan(0).WithMessage(GreaterThanErrorMessage);
+        RuleFor(x => x.MemoryInGb).GreaterThan(0).WithMessage(GreaterThanErrorMessage);
         // validate if OwnerId belongs to an active user
     }
 }

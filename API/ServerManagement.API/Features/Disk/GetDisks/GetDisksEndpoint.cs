@@ -7,9 +7,9 @@ public class GetDisksEndpoint : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet(
-                "/disks",
+                "/servers/{serverId:guid}/disks",
                 async (
-                    [FromQuery] Guid serverId,
+                    [FromRoute] Guid serverId,
                     [FromQuery] int? pageNumber,
                     [FromQuery] int? pageSize,
                     ISender sender

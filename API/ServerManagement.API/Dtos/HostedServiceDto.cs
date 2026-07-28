@@ -5,5 +5,9 @@ public record HostedServiceDto(
     string ServiceName,
     int Port,
     bool IsListening,
-    DateTimeOffset LastChecked
+    DateTimeOffset LastChecked,
+    string? CreatedBy,
+    DateTime? CreatedDate,
+    string? UpdatedBy,
+    DateTime? UpdatedDate
 );
