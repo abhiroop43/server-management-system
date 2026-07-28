@@ -1,37 +1,35 @@
-﻿using FluentValidation;
+using FluentValidation;
 
-namespace ServerManagement.API.Features.Server.AddServer;
+namespace ServerManagement.API.Features.Server.UpdateServer;
 
-public record AddServerCommand(
+public record UpdateServerCommand(
+    Guid Id,
     string Name,
-    Domain.Enums.OperationStatus Status,
     string HostName,
-    string PrimaryIp,
-    List<string> IpAddresses,
-    string MacAddress,
-    Domain.Enums.OperatingSystem OperatingSystem,
-    string GeographicRegion,
+    string PrimaryIpAddress,
     int CpuCores,
     double MemoryInGb,
-    List<string> Tags,
-    Dictionary<string, string> Metadata,
+    string Status,
     Guid? OwnerId,
-    string Notes
-) : ICommand<AddServerResult>;
+    List<string>? Tags,
+    Dictionary<string, string>? Metadata,
+    List<string>? IpAddresses,
+    string GeographicRegion
+) : ICommand<UpdateServerResult>;
 
-public record AddServerResult(Guid Id, bool Success);
+public record UpdateServerResult(bool Success);
 
-public class AddServerCommandValidator : AbstractValidator<AddServerCommand>
+public class UpdateServerCommandValidator : AbstractValidator<UpdateServerCommand>
 {
     private const string RequiredFieldErrorMessage = "{PropertyName} cannot be empty";
     private const string GreaterThanZeroErrorMessage = "{PropertyName} must be greater than 0";
 
-    public AddServerCommandValidator()
+    public UpdateServerCommandValidator()
     {
+        RuleFor(x => x.Id).NotEmpty().WithMessage(RequiredFieldErrorMessage);
         RuleFor(x => x.Name).NotEmpty().WithMessage(RequiredFieldErrorMessage);
         RuleFor(x => x.GeographicRegion).NotEmpty().WithMessage(RequiredFieldErrorMessage);
-        RuleFor(x => x.PrimaryIp).NotEmpty().WithMessage(RequiredFieldErrorMessage);
-        RuleFor(x => x.MacAddress).NotEmpty().WithMessage(RequiredFieldErrorMessage);
+        RuleFor(x => x.PrimaryIpAddress).NotEmpty().WithMessage(RequiredFieldErrorMessage);
         RuleFor(x => x.HostName).NotEmpty().WithMessage(RequiredFieldErrorMessage);
         RuleFor(x => x.CpuCores).GreaterThan(0).WithMessage(GreaterThanZeroErrorMessage);
         RuleFor(x => x.MemoryInGb).GreaterThan(0).WithMessage(GreaterThanZeroErrorMessage);

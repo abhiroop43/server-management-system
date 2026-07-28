@@ -4,7 +4,7 @@ public record DecommissionServerCommand(Guid ServerId) : ICommand<DecommissionSe
 
 public record DecommissionServerResult(bool Success);
 
-public class DecommissionServerHandler(ApplicationDbContext dbContext)
+public class DecommissionServerCommandHandler(ApplicationDbContext dbContext)
     : ICommandHandler<DecommissionServerCommand, DecommissionServerResult>
 {
     public async Task<DecommissionServerResult> Handle(
