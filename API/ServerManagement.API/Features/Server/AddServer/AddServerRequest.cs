@@ -28,8 +28,11 @@ public class AddServerCommandValidator : AbstractValidator<AddServerCommand>
     private const string GreaterThanErrorMessage =
         "{PropertyName} must be greater than {MinLength}";
 
-    public AddServerCommandValidator()
+    private readonly ApplicationIdentityDbContext? _identityDbContext;
+
+    public AddServerCommandValidator(ApplicationIdentityDbContext identityDbContext)
     {
+        _identityDbContext = identityDbContext;
         RuleFor(x => x.Name).NotEmpty().WithMessage(RequiredFieldErrorMessage);
         RuleFor(x => x.GeographicRegion).NotEmpty().WithMessage(RequiredFieldErrorMessage);
         RuleFor(x => x.PrimaryIp).NotEmpty().WithMessage(RequiredFieldErrorMessage);
@@ -37,6 +40,26 @@ public class AddServerCommandValidator : AbstractValidator<AddServerCommand>
         RuleFor(x => x.HostName).NotEmpty().WithMessage(RequiredFieldErrorMessage);
         RuleFor(x => x.CpuCores).GreaterThan(0).WithMessage(GreaterThanErrorMessage);
         RuleFor(x => x.MemoryInGb).GreaterThan(0).WithMessage(GreaterThanErrorMessage);
-        // validate if OwnerId belongs to an active user
+        RuleFor(x => x.OwnerId)
+            .MustAsync(ExistingUserAsync)
+            .WithMessage("{PropertyName} must belong to an active user");
+    }
+
+    private async Task<bool> ExistingUserAsync(Guid? ownerId, CancellationToken cancellationToken)
+    {
+        if (_identityDbContext == null)
+            return false;
+
+        if (ownerId == null || ownerId == Guid.Empty)
+            return true; // since ownerId is not mandatory
+
+        var user = await _identityDbContext
+            .ApplicationUsers.AsNoTracking()
+            .FirstOrDefaultAsync(
+                u => u.Id == ownerId.ToString() && u.EmailConfirmed == true,
+                cancellationToken
+            );
+
+        return user != null;
     }
 }

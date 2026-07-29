@@ -10,7 +10,7 @@ public record GetServerDetailsResult(
     string HostName,
     string PrimaryIpAddress,
     string OperatingSystem,
-    List<string> IpAddrIpAddresses,
+    List<string> IpAddresses,
     int CpuCores,
     double MemoryInGb,
     string UpTime,

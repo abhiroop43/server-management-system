@@ -165,7 +165,6 @@ namespace ServerManagement.Infrastructure.Migrations.ApplicationDb
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Metadata")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
@@ -184,7 +183,6 @@ namespace ServerManagement.Infrastructure.Migrations.ApplicationDb
                         .HasDefaultValue("Running");
 
                     b.Property<string>("Tags")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<TimeSpan>("UpTime")

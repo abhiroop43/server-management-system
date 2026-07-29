@@ -20,7 +20,10 @@ public static class DependencyInjection
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
         services.AddOpenApi();
-        services.AddCarter();
+        services.AddCarter(configurator: c =>
+        {
+            c.WithDefaultValidatorLifetime(ServiceLifetime.Scoped);
+        });
         services
             .AddHealthChecks()
             .AddSqlServer(configuration.GetConnectionString("ServerManagement")!);

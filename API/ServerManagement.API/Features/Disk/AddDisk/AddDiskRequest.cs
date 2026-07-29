@@ -1,4 +1,5 @@
 using FluentValidation;
+using ServerManagement.Domain.Enums;
 
 namespace ServerManagement.API.Features.Disk.AddDisk;
 
@@ -20,11 +21,30 @@ public class AddDiskCommandValidator : AbstractValidator<AddDiskCommand>
     private const string GreaterThanErrorMessage =
         "{PropertyName} must be greater than {MinLength}";
 
-    public AddDiskCommandValidator()
+    private readonly ApplicationDbContext _dbContext;
+
+    public AddDiskCommandValidator(ApplicationDbContext dbContext)
     {
+        _dbContext = dbContext;
         RuleFor(d => d.Name).NotEmpty().WithMessage(RequiredFieldErrorMessage);
         RuleFor(d => d.ServerId).NotEmpty().WithMessage(RequiredFieldErrorMessage);
         RuleFor(d => d.CapacityGb).GreaterThan(0).WithMessage(GreaterThanErrorMessage);
-        //validate serverId
+        RuleFor(d => d.ServerId)
+            .NotEmpty()
+            .WithMessage(RequiredFieldErrorMessage)
+            .MustAsync(ServerExistsAsync)
+            .WithMessage("ServerId does not exist or server might have been decommissioned");
+    }
+
+    private async Task<bool> ServerExistsAsync(Guid? serverId, CancellationToken cancellationToken)
+    {
+        if (serverId == null || serverId == Guid.Empty)
+            return false;
+
+        var server = await _dbContext
+            .Servers.AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == ServerId.Of(serverId.Value), cancellationToken);
+
+        return server != null && server.Status != OperationStatus.Decommissioned;
     }
 }
