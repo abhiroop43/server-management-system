@@ -41,7 +41,7 @@ public class UpdateServerEndpoint : ICarterModule
                         );
                     var apiResponse = new ApiResponseDto(
                         StatusCodes.Status201Created,
-                        "Server added successfully",
+                        "Server updated successfully",
                         response
                     );
                     return Results.Ok(apiResponse);
