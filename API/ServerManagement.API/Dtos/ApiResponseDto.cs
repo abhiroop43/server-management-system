@@ -1,3 +1,3 @@
 ﻿namespace ServerManagement.API.Dtos;
 
-public record ApiResponseDto(int StatusCode, string Message, dynamic? Data);
+public record ApiResponseDto(int Status, string Title, dynamic? Detail);

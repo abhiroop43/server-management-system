@@ -64,7 +64,8 @@ public class ServerConfiguration : IEntityTypeConfiguration<Server>
             .HasConversion(
                 tags => string.Join(',', tags),
                 str => str.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
-            );
+            )
+            .IsRequired(false);
 
         builder
             .Property(x => x.IpAddresses)
@@ -83,6 +84,7 @@ public class ServerConfiguration : IEntityTypeConfiguration<Server>
                         (JsonSerializerOptions?)null
                     )!
             )
+            .IsRequired(false)
             .HasColumnType("nvarchar(max)");
     }
 }

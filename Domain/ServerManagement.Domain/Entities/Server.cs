@@ -72,19 +72,44 @@ public class Server : Aggregate<ServerId>
         return server;
     }
 
-    public void Update(Server updatedServer)
+    public void Update(
+        string name,
+        string hostName,
+        string primaryIpAddress,
+        int cpuCores,
+        double memoryInGb,
+        string status,
+        Guid? ownerId,
+        List<string>? tags,
+        Dictionary<string, string>? metadata,
+        List<string>? ipAddresses,
+        string geographicRegion
+    )
     {
-        Name = updatedServer.Name;
-        HostName = updatedServer.HostName;
-        PrimaryIpAddress = updatedServer.PrimaryIpAddress;
-        CpuCores = updatedServer.CpuCores;
-        MemoryInGb = updatedServer.MemoryInGb;
-        OwnerId = updatedServer.OwnerId;
-        Tags = updatedServer.Tags;
-        Metadata = updatedServer.Metadata;
-        IpAddresses = updatedServer.IpAddresses;
-        GeographicRegion = updatedServer.GeographicRegion;
+        Name = ServerName.Of(name);
+        HostName = HostName.Of(hostName);
+        PrimaryIpAddress = PrimaryIpAddress.Of(primaryIpAddress);
+        CpuCores = cpuCores;
+        MemoryInGb = memoryInGb;
+        Status = Enum.Parse<OperationStatus>(status, true);
+        OwnerId = ownerId;
 
+        if (tags == null || tags.Count == 0)
+        {
+            Tags = [];
+        }
+
+        if (metadata == null || metadata.Count == 0)
+        {
+            Metadata = [];
+        }
+
+        if (ipAddresses == null || ipAddresses.Count == 0)
+        {
+            IpAddresses = [];
+        }
+
+        GeographicRegion = geographicRegion;
         AddDomainEvent(new ServerUpdatedEvent(this));
     }
 

@@ -29,9 +29,7 @@ public class AddServerEndpoint : ICarterModule
                 {
                     var command = addServerRequest.Adapt<AddServerCommand>();
                     var result = await sender.Send(command);
-
                     var response = result.Adapt<AddServerResponse>();
-
                     if (!response.Success)
                         return Results.BadRequest(
                             new ApiResponseDto(
@@ -40,7 +38,6 @@ public class AddServerEndpoint : ICarterModule
                                 null
                             )
                         );
-
                     var apiResponse = new ApiResponseDto(
                         StatusCodes.Status201Created,
                         "Server added successfully",
@@ -51,7 +48,7 @@ public class AddServerEndpoint : ICarterModule
             )
             .RequireAuthorization()
             .WithName("AddServer")
-            .Produces<AddServerResponse>()
+            .Produces<ApiResponseDto>()
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Add Server")
             .WithDescription("Create a new server");

@@ -7,9 +7,9 @@ public class GetDisksEndpoint : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet(
-                "/disks",
+                "/servers/{serverId:guid}/disks",
                 async (
-                    [FromQuery] Guid serverId,
+                    [FromRoute] Guid serverId,
                     [FromQuery] int? pageNumber,
                     [FromQuery] int? pageSize,
                     ISender sender
@@ -44,7 +44,7 @@ public class GetDisksEndpoint : ICarterModule
             )
             .RequireAuthorization()
             .WithName("GetDisks")
-            .Produces<GetDisksResponse>()
+            .Produces<ApiResponseDto>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .WithSummary("Get disks in a server")
             .WithDescription("Get paginated list of disks installed in a server");

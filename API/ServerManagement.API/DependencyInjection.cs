@@ -1,4 +1,5 @@
 using System.Text;
+using FluentValidation;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ServerManagement.API;
@@ -10,15 +11,19 @@ public static class DependencyInjection
         IConfiguration configuration
     )
     {
+        var assembly = typeof(Program).Assembly;
         services.AddMediatR(cfg =>
         {
             cfg.LicenseKey = configuration.GetSection("MEDIATR_LICENSE_KEY").Value;
-            cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+            cfg.RegisterServicesFromAssembly(assembly);
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
         services.AddOpenApi();
-        services.AddCarter();
+        services.AddCarter(configurator: c =>
+        {
+            c.WithDefaultValidatorLifetime(ServiceLifetime.Scoped);
+        });
         services
             .AddHealthChecks()
             .AddSqlServer(configuration.GetConnectionString("ServerManagement")!);
@@ -29,8 +34,9 @@ public static class DependencyInjection
         services.AddSwaggerGen();
 
         services.AddHttpContextAccessor();
+        services.AddValidatorsFromAssembly(assembly);
 
-        TypeAdapterConfig.GlobalSettings.Scan(typeof(Program).Assembly);
+        TypeAdapterConfig.GlobalSettings.Scan(assembly);
         services.AddSingleton(TypeAdapterConfig.GlobalSettings);
 
         return services;

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ServerManagement.API.Features.Auth.Register;
+﻿namespace ServerManagement.API.Features.Auth.Register;
 
 public class RegisterCommandHandler(
     UserManager<ApplicationUser> userManager,
