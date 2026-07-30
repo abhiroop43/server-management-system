@@ -12,7 +12,7 @@ public class AddDiskHandler(ApplicationDbContext dbContext)
     {
         var diskId = Guid.NewGuid();
 
-        Domain.Entities.Disk.Add(
+        var savedDisk = Domain.Entities.Disk.Add(
             DiskId.Of(diskId),
             ServerId.Of(command.ServerId!.Value),
             DiskName.Of(command.Name),
@@ -21,8 +21,12 @@ public class AddDiskHandler(ApplicationDbContext dbContext)
             Enum.Parse<DiskType>(command.DiskType)
         );
 
-        var savedRows = await dbContext.SaveChangesAsync(cancellationToken);
+        await dbContext.Disks.AddAsync(savedDisk, cancellationToken);
 
-        return new AddDiskResult(diskId, savedRows > 0);
+        var savedRecords = await dbContext.SaveChangesAsync(cancellationToken);
+
+        return savedRecords > 0
+            ? new AddDiskResult(diskId, true)
+            : new AddDiskResult(Guid.Empty, false);
     }
 }

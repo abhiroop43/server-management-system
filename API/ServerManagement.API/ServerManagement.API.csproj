@@ -27,7 +27,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Features\Disk\DeleteDisk\" />
-    <Folder Include="Features\Disk\UpdateDisk\" />
     <Folder Include="Features\HostedService\AddHostedService\" />
     <Folder Include="Features\HostedService\DeleteHostedService\" />
     <Folder Include="Features\HostedService\GetHostedServices\" />

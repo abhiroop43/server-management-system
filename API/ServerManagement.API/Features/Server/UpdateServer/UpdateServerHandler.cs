@@ -20,14 +20,6 @@ public class UpdateServerCommandHandler(ApplicationDbContext dbContext)
             throw new NotFoundException(nameof(currentServer), command.Id);
         }
 
-        // var validator = new UpdateServerCommandValidator();
-        // var validationResult = await validator.ValidateAsync(command);
-        //
-        // if (!validationResult.IsValid)
-        // {
-        //     throw new BadRequestException("Command validation failed");
-        // }
-
         currentServer.Update(
             command.Name,
             command.HostName,

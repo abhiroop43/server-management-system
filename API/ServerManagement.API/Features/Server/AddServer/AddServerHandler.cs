@@ -25,7 +25,7 @@ public class AddServerHandler(ApplicationDbContext dbContext)
             command.OperatingSystem,
             command.GeographicRegion
         );
-        dbContext.Servers.Add(server);
+        await dbContext.Servers.AddAsync(server, cancellationToken);
         var savedRecords = await dbContext.SaveChangesAsync(cancellationToken);
         return savedRecords > 0
             ? new AddServerResult(server.Id.Value, true)

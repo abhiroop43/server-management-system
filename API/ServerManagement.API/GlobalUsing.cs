@@ -1,4 +1,5 @@
 ﻿global using Carter;
+global using FluentValidation;
 global using HealthChecks.UI.Client;
 global using Mapster;
 global using MediatR;
@@ -11,6 +12,7 @@ global using ServerManagement.API.Dtos;
 global using ServerManagement.Domain;
 global using ServerManagement.Domain.Behaviors;
 global using ServerManagement.Domain.CQRS;
+global using ServerManagement.Domain.Enums;
 global using ServerManagement.Domain.Exceptions;
 global using ServerManagement.Domain.Pagination;
 global using ServerManagement.Domain.ValueObjects;
