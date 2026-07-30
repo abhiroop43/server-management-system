@@ -38,7 +38,7 @@ public class GetServersEndpoint : ICarterModule
             )
             .RequireAuthorization()
             .WithName("GetServers")
-            .Produces<GetServersResponse>()
+            .Produces<ApiResponseDto>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .WithSummary("Get List of Servers")
             .WithDescription("Retrieve a paginated list of all available servers");
