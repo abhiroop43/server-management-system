@@ -25,10 +25,4 @@
     <ProjectReference Include="..\..\Domain\ServerManagement.Domain\ServerManagement.Domain.csproj" />
     <ProjectReference Include="..\..\Infrastructure\ServerManagement.Infrastructure\ServerManagement.Infrastructure.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Features\HostedService\AddHostedService\" />
-    <Folder Include="Features\HostedService\DeleteHostedService\" />
-    <Folder Include="Features\HostedService\GetHostedServices\" />
-    <Folder Include="Features\HostedService\UpdateHostedService\" />
-  </ItemGroup>
 </Project>
