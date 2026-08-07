@@ -13,7 +13,7 @@ public class GetDisksQueryHandler(ApplicationDbContext dbContext)
         CancellationToken cancellationToken
     )
     {
-        var totalDisks = await dbContext.Disks.LongCountAsync(cancellationToken);
+        var totalDisks = await dbContext.Disks.AsNoTracking().LongCountAsync(cancellationToken);
         var disks = await dbContext
             .Disks.AsNoTracking()
             .Where(d => d.ServerId == query.ServerId)

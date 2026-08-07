@@ -15,12 +15,12 @@ public class GetDisksEndpoint : ICarterModule
                     ISender sender
                 ) =>
                 {
-                    if (pageNumber is null)
+                    if (pageNumber is null or 0)
                     {
                         pageNumber = 1;
                     }
 
-                    if (pageSize is null)
+                    if (pageSize is null or 0)
                     {
                         pageSize = 10;
                     }

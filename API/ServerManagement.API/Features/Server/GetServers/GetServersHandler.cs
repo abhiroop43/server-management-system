@@ -12,7 +12,7 @@ public class GetServersQueryHandler(ApplicationDbContext dbContext)
         CancellationToken cancellationToken
     )
     {
-        var totalServers = await dbContext.Servers.LongCountAsync(cancellationToken);
+        var totalServers = await dbContext.Servers.AsNoTracking().LongCountAsync(cancellationToken);
 
         var servers = await dbContext
             .Servers.OrderByDescending(x => x.UpdatedDate)

@@ -10,12 +10,12 @@ public class GetServersEndpoint : ICarterModule
                 "/servers",
                 async ([FromQuery] int? pageNumber, [FromQuery] int? pageSize, ISender sender) =>
                 {
-                    if (pageNumber is null)
+                    if (pageNumber is null or 0)
                     {
                         pageNumber = 1;
                     }
 
-                    if (pageSize is null)
+                    if (pageSize is null or 0)
                     {
                         pageSize = 10;
                     }
