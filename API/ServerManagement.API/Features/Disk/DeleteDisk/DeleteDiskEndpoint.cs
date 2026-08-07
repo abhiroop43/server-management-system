@@ -8,7 +8,7 @@ public class DeleteDiskEndpoint : ICarterModule
                 "/servers/{serverId:guid}/disks/{diskId:guid}",
                 async ([FromRoute] Guid serverId, [FromRoute] Guid diskId, ISender sender) =>
                 {
-                    var command = new DeleteDiskCommand(diskId);
+                    var command = new DeleteDiskCommand(diskId, serverId);
                     var result = await sender.Send(command);
 
                     return result.Success
@@ -24,7 +24,7 @@ public class DeleteDiskEndpoint : ICarterModule
             )
             .RequireAuthorization()
             .WithName("DeleteDisk")
-            .Produces<ApiResponseDto>()
+            .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Delete a disk using disk Id")

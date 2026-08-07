@@ -1,6 +1,6 @@
 namespace ServerManagement.API.Features.Disk.DeleteDisk;
 
-public record DeleteDiskCommand(Guid Id) : ICommand<DeleteDiskResult>;
+public record DeleteDiskCommand(Guid Id, Guid ServerId) : ICommand<DeleteDiskResult>;
 
 public record DeleteDiskResult(bool Success);
 
@@ -13,7 +13,10 @@ public class DeleteDiskCommandHandler(ApplicationDbContext dbContext)
     )
     {
         var disk = await dbContext.Disks.FirstOrDefaultAsync(
-            x => x.Id == DiskId.Of(command.Id) && x.IsActive,
+            x =>
+                x.Id == DiskId.Of(command.Id)
+                && x.IsActive
+                && x.ServerId == ServerId.Of(command.ServerId),
             cancellationToken
         );
 
