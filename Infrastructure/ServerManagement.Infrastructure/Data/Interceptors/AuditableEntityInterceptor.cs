@@ -37,8 +37,7 @@ public class AuditableEntityInterceptor(IHttpContextAccessor httpContextAccessor
         var user = httpContextAccessor.HttpContext?.User;
         var username =
             user?.Identity?.Name
-            ?? user?.FindFirst("preferred_username")?.Value
-            ?? user?.FindFirst("email")?.Value
+            ?? user?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value
             ?? "System";
 
         foreach (var entry in dbContext.ChangeTracker.Entries<IEntity>())
