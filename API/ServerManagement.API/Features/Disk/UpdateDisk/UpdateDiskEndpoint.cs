@@ -29,20 +29,21 @@ public class UpdateDiskEndpoint : ICarterModule
                     var result = await sender.Send(command);
                     var response = result.Adapt<UpdateDiskResponse>();
 
-                    if (response.Success)
-                    {
-                        return new ApiResponseDto(
-                            StatusCodes.Status200OK,
-                            "Disk updated successfully",
-                            response
+                    return response.Success
+                        ? Results.Ok(
+                            new ApiResponseDto(
+                                StatusCodes.Status200OK,
+                                "Disk updated successfully",
+                                response
+                            )
+                        )
+                        : Results.BadRequest(
+                            new ApiResponseDto(
+                                StatusCodes.Status400BadRequest,
+                                "Failed to update disk. Please try again later",
+                                response
+                            )
                         );
-                    }
-
-                    return new ApiResponseDto(
-                        StatusCodes.Status400BadRequest,
-                        "Failed to update disk. Please try again later",
-                        response
-                    );
                 }
             )
             .RequireAuthorization()

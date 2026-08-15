@@ -11,7 +11,7 @@ public record AddHostedServiceResult(Guid Id, bool Success);
 
 public class AddHostedServiceCommandValidator : AbstractValidator<AddHostedServiceCommand>
 {
-    private const string RequiredFieldErrorMessage = "{PropertName} cannot be empty";
+    private const string RequiredFieldErrorMessage = "{PropertyName} cannot be empty";
 
     private const string GreaterThanErrorMessage =
         "{PropertyName} must be greater than {MinLength}";
