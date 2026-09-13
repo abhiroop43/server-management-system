@@ -129,7 +129,7 @@ ServerManagement.sln
 5. **Configure user secrets for development** (optional but recommended)
 
    ```bash
-   dotnet user-secrets set "MEDIATR_LICENSE_KEY" "your-license-key" --project API/ServerManagement.API
+   dotnet user-secrets set "MediatrLicenseKey" "your-license-key" --project API/ServerManagement.API
    ```
 
     ```bash

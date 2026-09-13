@@ -14,16 +14,13 @@ public static class DependencyInjection
         var assembly = typeof(Program).Assembly;
         services.AddMediatR(cfg =>
         {
-            cfg.LicenseKey = configuration.GetSection("MEDIATR_LICENSE_KEY").Value;
+            cfg.LicenseKey = configuration.GetSection("MediatrLicenseKey").Value;
             cfg.RegisterServicesFromAssembly(assembly);
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
         services.AddOpenApi();
-        services.AddCarter(configurator: c =>
-        {
-            c.WithDefaultValidatorLifetime(ServiceLifetime.Scoped);
-        });
+        services.AddCarter(configurator: c => { c.WithDefaultValidatorLifetime(ServiceLifetime.Scoped); });
         services
             .AddHealthChecks()
             .AddSqlServer(configuration.GetConnectionString("ServerManagement")!);
