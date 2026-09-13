@@ -15,7 +15,7 @@ public class AddHostedServiceHandler(ApplicationDbContext dbContext)
             HostedServiceName.Of(command.HostedServiceName),
             command.Port,
             command.IsListening,
-            DateTimeOffset.Now
+            DateTimeOffset.UtcNow
         );
 
         await dbContext.HostedServices.AddAsync(hostedService, cancellationToken);

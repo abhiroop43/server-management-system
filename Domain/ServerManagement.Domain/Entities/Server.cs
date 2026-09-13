@@ -170,7 +170,7 @@ public class Server : Aggregate<ServerId>
     public void DecommissionServer()
     {
         Status = OperationStatus.Decommissioned;
-        DecommissionedAt = DateTimeOffset.Now;
+        DecommissionedAt = DateTimeOffset.UtcNow;
 
         AddDomainEvent(new ServerDecommissionedEvent(this));
     }
