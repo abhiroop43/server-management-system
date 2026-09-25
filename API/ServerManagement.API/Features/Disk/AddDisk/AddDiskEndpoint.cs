@@ -15,34 +15,42 @@ public class AddDiskEndpoint : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost(
-            "/servers/{serverId:guid}/disks",
-            async ([FromRoute] Guid serverId, [FromBody] AddDiskRequest request, ISender sender) =>
-            {
-                var mappedCmd = request.Adapt<AddDiskCommand>();
-                var command = mappedCmd with { ServerId = serverId };
-
-                var result = await sender.Send(command);
-
-                var response = result.Adapt<AddDiskResponse>();
-
-                if (!response.Success)
+                "/servers/{serverId:guid}/disks",
+                async (
+                    [FromRoute] Guid serverId,
+                    [FromBody] AddDiskRequest request,
+                    ISender sender
+                ) =>
                 {
-                    return Results.BadRequest(
-                        new ApiResponseDto(
-                            StatusCodes.Status400BadRequest,
-                            "Failed to add disk. Please try again later",
-                            response
-                        )
-                    );
-                }
+                    var mappedCmd = request.Adapt<AddDiskCommand>();
+                    var command = mappedCmd with { ServerId = serverId };
 
-                var apiResponse = new ApiResponseDto(
-                    StatusCodes.Status201Created,
-                    "Disk added successfully",
-                    response
-                );
-                return Results.Created($"/servers/{serverId}/disks/{response.Id}", apiResponse);
-            }
-        );
+                    var result = await sender.Send(command);
+
+                    var response = result.Adapt<AddDiskResponse>();
+
+                    if (!response.Success)
+                        return Results.BadRequest(
+                            new ApiResponseDto(
+                                StatusCodes.Status400BadRequest,
+                                "Failed to add disk. Please try again later",
+                                response
+                            )
+                        );
+
+                    var apiResponse = new ApiResponseDto(
+                        StatusCodes.Status201Created,
+                        "Disk added successfully",
+                        response
+                    );
+                    return Results.Created($"/servers/{serverId}/disks/{response.Id}", apiResponse);
+                }
+            )
+            .RequireAuthorization()
+            .WithName("AddDisk")
+            .Produces<ApiResponseDto>()
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .WithSummary("Add Disk")
+            .WithDescription("Create a new disk for a server");
     }
 }
