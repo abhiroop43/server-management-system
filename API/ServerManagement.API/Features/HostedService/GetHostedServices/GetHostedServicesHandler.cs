@@ -3,7 +3,7 @@ namespace ServerManagement.API.Features.HostedService.GetHostedServices;
 public record GetHostedServicesQuery(Guid ServerId, PaginationRequest PaginationRequest)
     : IQuery<GetHostedServicesResult>;
 
-public record GetHostedServicesResult(PaginationResult<HostedServiceDto> HostedServices);
+public record GetHostedServicesResult(PaginationResult<HostedServiceDto> Data);
 
 public class GetHostedServicesHandler(ApplicationDbContext dbContext)
     : IQueryHandler<GetHostedServicesQuery, GetHostedServicesResult>

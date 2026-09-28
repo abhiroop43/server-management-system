@@ -3,7 +3,7 @@
 public record GetDisksQuery(ServerId ServerId, PaginationRequest PaginationRequest)
     : IQuery<GetDisksResult>;
 
-public record GetDisksResult(PaginationResult<DiskDto> Disks);
+public record GetDisksResult(PaginationResult<DiskDto> Data);
 
 public class GetDisksQueryHandler(ApplicationDbContext dbContext)
     : IQueryHandler<GetDisksQuery, GetDisksResult>
@@ -25,7 +25,7 @@ public class GetDisksQueryHandler(ApplicationDbContext dbContext)
         var disksDto = disks.Adapt<List<DiskDto>>();
 
         var result = new PaginationResult<DiskDto>(
-            (query.PaginationRequest.PageIndex + 1),
+            query.PaginationRequest.PageIndex + 1,
             query.PaginationRequest.PageSize,
             totalDisks,
             disksDto

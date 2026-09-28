@@ -1,7 +1,5 @@
 ﻿namespace ServerManagement.API.Features.Server.GetServers;
 
-public record GetServersResponse(PaginationResult<ServerDto> Servers);
-
 public class GetServersEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
@@ -11,26 +9,20 @@ public class GetServersEndpoint : ICarterModule
                 async ([FromQuery] int? pageNumber, [FromQuery] int? pageSize, ISender sender) =>
                 {
                     if (pageNumber is null or 0)
-                    {
                         pageNumber = 1;
-                    }
 
                     if (pageSize is null or 0)
-                    {
                         pageSize = 10;
-                    }
 
                     var query = new GetServersQuery(
                         new PaginationRequest(pageNumber.Value - 1, pageSize.Value)
                     );
                     var result = await sender.Send(query);
 
-                    var response = result.Adapt<GetServersResponse>();
-
                     var apiResponse = new ApiResponseDto(
                         StatusCodes.Status200OK,
                         "Servers fetched successfully",
-                        response
+                        result
                     );
 
                     return Results.Ok(apiResponse);

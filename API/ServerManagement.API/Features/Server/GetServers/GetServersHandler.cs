@@ -2,7 +2,7 @@
 
 public record GetServersQuery(PaginationRequest PaginationRequest) : IQuery<GetServersResult>;
 
-public record GetServersResult(PaginationResult<ServerDto> Servers);
+public record GetServersResult(PaginationResult<ServerDto> Data);
 
 public class GetServersQueryHandler(ApplicationDbContext dbContext)
     : IQueryHandler<GetServersQuery, GetServersResult>
@@ -23,7 +23,7 @@ public class GetServersQueryHandler(ApplicationDbContext dbContext)
         var serversDto = servers.Adapt<List<ServerDto>>();
 
         var result = new PaginationResult<ServerDto>(
-            (query.PaginationRequest.PageIndex + 1),
+            query.PaginationRequest.PageIndex + 1,
             query.PaginationRequest.PageSize,
             totalServers,
             serversDto
